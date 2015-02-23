@@ -58,4 +58,10 @@ def step1(request):
 
 @login_required
 def step2(request):
+    UserStep.objects.setUserStep(request.user, 1, 2)
     return render(request, 'phase1/step2.djhtml')
+
+
+@login_required
+def step3(request):
+    return render(request, 'phase1/step3.djhtml')
