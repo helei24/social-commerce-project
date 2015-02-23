@@ -3,6 +3,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from users.models import UserStep
 from django import forms
+from .user_flow import phase1_redirect
 
 
 class AgreementForm(forms.Form):
@@ -10,10 +11,14 @@ class AgreementForm(forms.Form):
 
 
 def agreement(request):
-    """This view controls the agreement form and related user flow"""
+    if 'resetagreement' in request.GET:
+        request.session.pop("agreed", None)
 
+    phase1_redirect(request.user)
+
+    """This view controls the agreement form and related user flow"""
     if "agreed" in request.session:
-        del request.session["agreed"]
+        return HttpResponseRedirect("/phase1/login/")
 
     # this is just used to controll access to the agreement
     if request.method == "POST":
@@ -38,6 +43,8 @@ def agreement(request):
 
 def login_page(request):
     """This view controls the login page"""
+
+    phase1_redirect(request.user)
 
     # we cant access login page without first agreeing
     if "agreed" not in request.session:
