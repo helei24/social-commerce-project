@@ -20743,11 +20743,25 @@ var MovieActions = {
 module.exports = MovieActions;
 
 
-},{"../constants/MovieConstants":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/constants/MovieConstants.js","../dispatcher/AppDispatcher":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/dispatcher/AppDispatcher.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewApp.react.jsx":[function(require,module,exports){
+},{"../constants/MovieConstants":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/constants/MovieConstants.js","../dispatcher/AppDispatcher":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/dispatcher/AppDispatcher.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/MoviesContainer.react.jsx":[function(require,module,exports){
 var React = require('react');
 var MovieStore = require('../stores/MovieStore');
 var MovieActions = require('../actions/MovieActions');
 
+var MoviesContainer = React.createClass({displayName: "MoviesContainer",
+    render: function(){
+    }
+});
+
+module.exports = MoviesContainer;
+
+
+},{"../actions/MovieActions":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/actions/MovieActions.js","../stores/MovieStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/MovieStore.js","react":"/Users/Felix/Documents/social_commerce_project/node_modules/react/react.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewApp.react.jsx":[function(require,module,exports){
+var React = require('react');
+var MovieStore = require('../stores/MovieStore');
+var MovieActions = require('../actions/MovieActions');
+var SideBar = require("./SideBar.react.jsx");
+var MoviesContainer = require("./MoviesContainer.react.jsx");
 
 function getMoviesState() {
     return {
@@ -20768,11 +20782,8 @@ var ReviewApp = React.createClass({displayName: "ReviewApp",
     render: function(){
         return(
             React.createElement("div", null, 
-                React.createElement("h1", null, "test"), 
-                React.createElement("h1", null, "test"), 
-                React.createElement("h1", null, "test"), 
-                React.createElement("h1", null, "test"), 
-                React.createElement("h1", null, "test")
+                React.createElement(SideBar, null), 
+                React.createElement(MoviesContainer, null)
             )
         );
     },
@@ -20783,6 +20794,19 @@ var ReviewApp = React.createClass({displayName: "ReviewApp",
 });
 
 module.exports = ReviewApp;
+
+
+},{"../actions/MovieActions":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/actions/MovieActions.js","../stores/MovieStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/MovieStore.js","./MoviesContainer.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/MoviesContainer.react.jsx","./SideBar.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/SideBar.react.jsx","react":"/Users/Felix/Documents/social_commerce_project/node_modules/react/react.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/SideBar.react.jsx":[function(require,module,exports){
+var React = require('react');
+var MovieStore = require('../stores/MovieStore');
+var MovieActions = require('../actions/MovieActions');
+
+var SideBar = React.createClass({displayName: "SideBar",
+    render: function(){
+    }
+});
+
+module.exports = SideBar;
 
 
 },{"../actions/MovieActions":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/actions/MovieActions.js","../stores/MovieStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/MovieStore.js","react":"/Users/Felix/Documents/social_commerce_project/node_modules/react/react.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/constants/MovieConstants.js":[function(require,module,exports){
@@ -20809,7 +20833,10 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _movies = {};
+// movies_data is passed from global object
+var _movies = window.movies_data;
+var _tags = window.tags_data
+console.log(tags_data);
 
 /**
 * Create a review
@@ -20886,10 +20913,10 @@ module.exports = MovieStore;
 var React = require('react/addons');
 var ReviewApp = require('./components/ReviewApp.react.jsx');
 
-module.exports = {
-    React: React,
-    ReviewApp: ReviewApp
-};
+React.render(
+    React.createElement(ReviewApp, null),
+    document.getElementById('reviewapp')
+);
 
 
 },{"./components/ReviewApp.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewApp.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}]},{},["review_app_bundle"]);

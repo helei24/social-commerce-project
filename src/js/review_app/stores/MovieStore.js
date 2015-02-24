@@ -5,7 +5,10 @@ var assign = require('object-assign');
 
 var CHANGE_EVENT = 'change';
 
-var _movies = {};
+// movies_data is passed from global object
+var _movies = window.movies_data;
+var _tags = window.tags_data
+console.log(tags_data);
 
 /**
 * Create a review

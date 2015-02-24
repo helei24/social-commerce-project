@@ -1,7 +1,8 @@
 var React = require('react');
 var MovieStore = require('../stores/MovieStore');
 var MovieActions = require('../actions/MovieActions');
-
+var SideBar = require("./SideBar.react.jsx");
+var MoviesContainer = require("./MoviesContainer.react.jsx");
 
 function getMoviesState() {
     return {
@@ -22,11 +23,8 @@ var ReviewApp = React.createClass({
     render: function(){
         return(
             <div>
-                <h1>test</h1>
-                <h1>test</h1>
-                <h1>test</h1>
-                <h1>test</h1>
-                <h1>test</h1>
+                <SideBar />
+                <MoviesContainer />
             </div>
         );
     },
