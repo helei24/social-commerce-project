@@ -32184,7 +32184,16 @@ var MovieActions = {
         AppDispatcher.dispatch({
             actionType: MovieConstants.SHUFFLE_MOVIES
         });
-        
+    },
+    doSearch: function(query, tags, sortBy){
+        AppDispatcher.dispatch({
+            actionType: MovieConstants.SEARCH_MOVIES,
+            data: {
+                query: query,
+                tags: tags,
+                sortBy: sortBy
+            }
+        });
     }
 };
 
@@ -32415,30 +32424,63 @@ var MovieActions = require('../actions/MovieActions');
 var SideBar = React.createClass({displayName: "SideBar",
 
     shuffleMovies: function(){
+        this.refs.selectSort.getDOMNode().value = "Random";
         MovieActions.shuffleMovies();
     },
-    search: function(){
-        MovieActions.search(
-            this.refs.searchInput.value,
-            this.refs.selectedTags.value,
-            this.refs.selectSort.value
-        );
+    //Are we typing in search field?
+    typingInSearchField: false,
+
+    //We are waiting some time before searching
+    typingTimeout: undefined,
+
+    //to compare if new search is the same as old search. If it is, we dont refresh!
+    oldSearchValue: undefined,
+
+    //When we type in search field
+    textSearch: function(){
+        if(this.typingInSearchField){
+            clearTimeout(this.typingTimeout);
+        } 
+        this.typingInSearchField = true;
+        this.typingTimeout = setTimeout(function(){
+            this.typingInSearchField = false;
+            var newSearchValue = this.refs.searchInput.getDOMNode().value;
+            if(this.oldSearchValue != newSearchValue)
+                this.doSearch();
+            this.oldSearchValue = this.refs.searchInput.getDOMNode().value;
+        }.bind(this), 200);
+    },
+    componentDidMount: function(){
+        //We set the old search field value at mounting
+        this.oldSearchValue = this.refs.searchInput.getDOMNode().value;
+    },
+    doSearch: function(){
+        MovieActions.doSearch(
+            this.refs.searchInput.getDOMNode().value,
+            this.props.tags,
+            this.refs.selectSort.getDOMNode().value
+      )  
     },
     render: function(){
-        var tags_checkbox = this.props.tags.map(function(t){
+        var tags_checkbox = this.props.tags.map(function(t, i){
+            var toggleTag = function(){
+                t.isChecked = !t.isChecked;
+                this.doSearch();
+            }.bind(this);
+
             return(
-                React.createElement("label", {className: "btn btn-default"}, 
-                    React.createElement("input", {type: "checkbox", autocomplete: "off"}), 
-                    t
+                React.createElement("label", {className: "btn btn-default", onClick: toggleTag}, 
+                    React.createElement("input", {type: "checkbox", autocomplete: "off", key: i}), 
+                    t.name
                 )
-            )
-        });
+            );
+        }.bind(this));
         return(
             React.createElement("div", {className: "side-bar col-xs-3"}, 
                 React.createElement("h4", null, React.createElement("i", {className: "fa fa-search"}), " Search"), 
-                React.createElement("input", {id: "input-search", ref: "searchInput", type: "text", value: ""}), 
+                React.createElement("input", {id: "input-search", ref: "searchInput", type: "text", onChange: this.textSearch}), 
                 React.createElement("h4", null, React.createElement("i", {className: "fa fa-sort"}), " Sort by"), 
-                React.createElement("select", {className: "form-control", ref: "selectSort"}, 
+                React.createElement("select", {className: "form-control", ref: "selectSort", onChange: this.doSearch}, 
                     React.createElement("option", null, "Random"), 
                     React.createElement("option", null, "Title"), 
                     React.createElement("option", null, "Release Year")
@@ -32464,7 +32506,8 @@ module.exports = keyMirror({
     REVIEW_CREATE: null,
     MOVIES_SORT: null,
     GET_MOVIES: null,
-    SHUFFLE_MOVIES: null
+    SHUFFLE_MOVIES: null,
+    SEARCH_MOVIES: null
 });
 
 
@@ -32487,12 +32530,14 @@ var CHANGE_EVENT = 'change';
 
 // movies_data is passed from global object
 var _perPage = 8;
-var _movies = getPaginatedMovies(window.movies_data, _perPage);
-var _tags = window.tags_data;
-var _moviesAndTags = {
-    movies: _movies,
-    tags: _tags
-};
+var _sortBy = 'Random';
+var _moviesOriginal = window.movies_data;
+var _tags = window.tags_data.map(function(t){
+    return {name: t, isChecked: false}; 
+});
+
+//The movies we will return, we start by copying the original movies
+var _movies = _moviesOriginal.slice();
 
 /**
 * Takes an array of movies and a number and
@@ -32528,11 +32573,62 @@ function updateAllMovies(updates){
 
 var MovieStore = assign({}, EventEmitter.prototype, {
     getAllMoviesAndTags: function() {
-        return _moviesAndTags;
+        return {
+            movies: getPaginatedMovies(_movies, _perPage),
+            tags: _tags
+        };
+    },
+    doSearch: function(query, tags, sortBy) {
+        var queryResult = [];
+        var regex = new RegExp(query, "i");
+        var subset;
+        //we set the tags to change isChecked values
+        assign(_tags, tags);
+
+        //an array of tag names that are checked
+        tags = _tags.filter(function(t){
+            return t.isChecked;
+        }).map(function(t){
+            return t.name;
+        });
+
+        //for all movies, do check
+        _moviesOriginal.forEach(function(movie){
+            subset = tags.length ===  _.intersection(tags, movie.tags).length;
+            if(regex.test(movie.name) && subset){
+                queryResult.push(movie);
+            }
+        });
+
+        //sort the results
+        switch(sortBy){
+        case "Random":
+            queryResult = _.shuffle(queryResult);       
+            break;
+        case "Title":
+            queryResult.sort(function(a, b){
+                // Compare the 2 dates
+                if(a.name < b.name) return -1;
+                if(a.name > b.name) return 1;
+                return 0;
+            });
+            break;
+        case "Release Year":
+            queryResult.sort(function(a, b){
+                // Compare the 2 dates
+                if(a.caracteristic_1 < b.caracteristic_1) return -1;
+                if(a.caracteristic_1 > b.caracteristic_1) return 1;
+                return 0;
+            });
+            break;
+        default:
+            break;
+        }
+
+        _movies = queryResult;
     },
     shuffleMovies: function(){
-        var flattenArray = _.flatten(_moviesAndTags.movies);
-        _moviesAndTags.movies = getPaginatedMovies(_.shuffle(flattenArray), _perPage);       
+        _movies = _.shuffle(_movies);       
     },
     emitChange: function() {
         this.emit(CHANGE_EVENT);
@@ -32557,6 +32653,10 @@ AppDispatcher.register(function(action){
     switch(action.actionType) {
     case MovieConstants.SHUFFLE_MOVIES:
         MovieStore.shuffleMovies();
+        MovieStore.emitChange();
+        break;
+    case MovieConstants.SEARCH_MOVIES:
+        MovieStore.doSearch(action.data.query, action.data.tags,action.data.sortBy);
         MovieStore.emitChange();
         break;
     default:

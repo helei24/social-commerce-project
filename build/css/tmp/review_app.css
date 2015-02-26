@@ -62,7 +62,8 @@ body, html {
     padding-left: 70px;
     padding-right: 70px; }
   .movie-pages #arrows {
-    position: relative; }
+    position: relative;
+    height: 34px; }
     .movie-pages #arrows .arrow {
       top: 10px; }
     .movie-pages #arrows #left-arrow {

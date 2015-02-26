@@ -31,7 +31,16 @@ var MovieActions = {
         AppDispatcher.dispatch({
             actionType: MovieConstants.SHUFFLE_MOVIES
         });
-        
+    },
+    doSearch: function(query, tags, sortBy){
+        AppDispatcher.dispatch({
+            actionType: MovieConstants.SEARCH_MOVIES,
+            data: {
+                query: query,
+                tags: tags,
+                sortBy: sortBy
+            }
+        });
     }
 };
 
