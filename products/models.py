@@ -1,4 +1,5 @@
 from django.db import models
+from django.templatetags.static import static
 from reviews.models import Reviewing
 import json
 
@@ -21,7 +22,7 @@ class Tag(models.Model):
 
 class CustomProductManager(models.Manager):
 
-    def get_user_products(self, user):
+    def get_user_products(self, request):
         """
         Get user movies. This method adds a property 'reviewd'
         reviewed movies
@@ -33,12 +34,21 @@ class CustomProductManager(models.Manager):
 
         # add ids of reviewed products to set
         for e in Reviewing.objects.filter(
-                user=user).select_related('product'):
+                user=request.user).select_related('product'):
             reviewed_product_ids.add(e.product.id)
 
         # if the movie id is in the set, add reviewd=true
         for p in products:
             p['reviewed'] = True if p['id'] in reviewed_product_ids else False
+            p_tags = list(
+                Tag.objects.filter(product=p['id']).values('name'))
+            p_tags_names = []
+
+            for pt in p_tags:
+                p_tags_names.append(pt['name'])
+
+            p['tags'] = p_tags_names
+            p['image_path'] = static('images/products/' + p['image_path'])
 
         return json.dumps(products)
 

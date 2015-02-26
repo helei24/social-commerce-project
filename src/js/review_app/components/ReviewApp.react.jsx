@@ -5,13 +5,11 @@ var SideBar = require("./SideBar.react.jsx");
 var MoviesContainer = require("./MoviesContainer.react.jsx");
 
 function getMoviesState() {
-    return {
-        allMovies: MovieStore.getAllMovies()
-    }
+    return MovieStore.getAllMoviesAndTags();
 }
-
 var ReviewApp = React.createClass({
     getInitialState: function(){
+        MovieStore.shuffleMovies();
         return getMoviesState();
     },
     componentDidMount: function(){
@@ -22,9 +20,11 @@ var ReviewApp = React.createClass({
     },
     render: function(){
         return(
-            <div>
-                <SideBar />
-                <MoviesContainer />
+            <div className="row">
+                <div className="review-app">
+                    <SideBar tags={this.state.tags}/>
+                    <MoviesContainer moviePages={this.state.movies}/>
+                </div>
             </div>
         );
     },

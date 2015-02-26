@@ -83,7 +83,7 @@ def step1(request):
     if request.user.userstep.step != 1:
         return redirect_user_to_current_step(request.user)
 
-    products = Product.objects.get_user_products(request.user)
+    products = Product.objects.get_user_products(request)
     tags = Tag.objects.get_tag_names()
     context_dict = {'products': products, 'tags': tags}
     return render(request, 'phase1/step1.djhtml', context_dict)

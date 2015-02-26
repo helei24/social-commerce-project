@@ -1,5 +1,5 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var ReviewConstants = require('../constants/MovieConstants');
+var MovieConstants = require('../constants/MovieConstants');
 
 var MovieActions = {
     getInitialData: function(){
@@ -25,6 +25,13 @@ var MovieActions = {
             actionType: MovieConstants.MOVIES_SORT,
             data: sort_data
         });
+    },
+
+    shuffleMovies: function(){
+        AppDispatcher.dispatch({
+            actionType: MovieConstants.SHUFFLE_MOVIES
+        });
+        
     }
 };
 
