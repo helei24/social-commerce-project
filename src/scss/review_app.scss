@@ -1,4 +1,4 @@
-$review-widget-height: 50px;
+$review-widget-height: 0px;
 $review-widget-height-init: $review-widget-height - 60px;
 
 body, html {
@@ -106,7 +106,7 @@ body, html {
 
     }
 }
-.review-app {
+#review-app-inner {
     position: relative;
     width:100%;
 }
@@ -132,23 +132,31 @@ body, html {
     -webkit-box-shadow: 10px 10px 49px 0px rgba(0,0,0,0.09);
     -moz-box-shadow: 10px 10px 49px 0px rgba(0,0,0,0.09);
     box-shadow: 10px 10px 49px 0px rgba(0,0,0,0.09);
-    img {
+    .movie-image {
         width: 90%;
-        border: 1px solid black;
+    }
+    .ajax-loader {
+        margin-left: 5px;
     }
     .inner {
         padding: 15px;
     }
     .form-comments{
         width: 100%;
-        margin-bottom: 30px
+        margin-bottom: 15px
     }
     .description{
         height: 100%;
         overflow: auto;
     }
     .tab-panel {
-        margin-bottom: 30px;
+        margin-bottom: 10px;
+    }
+    .tab-content {
+        padding: 5px;
+    }
+    #recommend {
+        margin-bottom: 20px;
     }
 };
 #review-widget.example-enter {
@@ -182,8 +190,10 @@ body, html {
 }
 
 #overlay {
-    position:absolute;
+    position:fixed;
     z-index:998;
     height:100%;
     width:100%;
+    top: 0;
+    left:0;
 }

@@ -1,6 +1,4 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
-var MovieActions = require('../actions/MovieActions');
-var MovieStore = require('./MovieStore');
 var EventEmitter = require('events').EventEmitter;
 var MovieConstants = require('../constants/MovieConstants');
 var assign = require('object-assign');
@@ -44,10 +42,11 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
         });
 
     },
-    openReviewBox: function(id){
+    openReviewBox: function(data){
+        console.log(data);
         $overlay.show();
         $willFade.addClass('fade');
-        _reviewBox.movie = MovieStore.getMovieFromId(id);
+        _reviewBox.movie = data;
         _reviewBox.open = true;
 
         if(_reviewBox.movie.description.length > _cropLength){

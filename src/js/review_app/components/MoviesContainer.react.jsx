@@ -44,9 +44,6 @@ var MoviesContainer = React.createClass({
 
         return(
             <div className="movie-pages col-md-9">
-                <div className="row">
-                    <ReviewBox reviewElements={this.props.reviewElements}/>
-                </div>
                 <div id="arrows" className="will-fade"></div>
                 <div id="slick-it" className="will-fade">
                     {moviePages}

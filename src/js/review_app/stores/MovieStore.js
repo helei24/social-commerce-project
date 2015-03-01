@@ -1,6 +1,7 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var EventEmitter = require('events').EventEmitter;
 var MovieConstants = require('../constants/MovieConstants');
+var ReviewBoxStore = require("./ReviewBoxStore");
 var assign = require('object-assign');
 var _ = require('lodash');
 
@@ -39,20 +40,6 @@ function getNumberOfReviewedMovies(movies){
     }
     return count;
 }
-function createReview(data){
-    // AJAX CALL TO CREATE A NEW REVIEW
-}
-
-// function updateMovie(id, updates){
-    
-//     _movies[id] = assign({}, _movies[id], updates);
-// }
-
-// function updateAllMovies(updates){
-//     for(var id in _movies){
-//         update(id, updates);
-//     }
-// }
 
 var MovieStore = assign({}, EventEmitter.prototype, {
     //called by root component at startup
@@ -143,11 +130,27 @@ var MovieStore = assign({}, EventEmitter.prototype, {
     shuffleMovies: function(){
         _movies = _.shuffle(_movies);       
     },
+    submit_review: function(movie, reviewData){
+        // var $ajaxLoader = $('<img id="ajax-loader" class="ajax-loader"/>');
+        // $ajaxLoader.attr('src', '/static/images/ajax-loader.gif');
+        // var $submitContainer = $('#submit-container');
+        // $submitContainer.append($ajaxLoader);
+       //SEND REVIEW WITH AJAX IN THE ACTIONS
+
+        //MODIFIY THE MOVIE TO TRUE
+        movie.reviewed = true;
+        // assign(_moviesOriginal, movie);
+        // for(var i=0, l=_moviesOriginal.length; i<l; i++){
+        //     if(movie.id === _moviesOriginal[i].id){
+        //         _moviesOriginal[i].reviewed = true;
+        //         break;
+        //     }
+        // }
+        // $ajaxloader.remove();
+        //now we can close
+    },
     emitChange: function() {
         this.emit(CHANGE_EVENT);
-    },
-    emitReviewChange: function() {
-        this.emit(REVIEWCHANGE_EVENT);
     },
     /**
      * @param {function} callback
@@ -155,18 +158,11 @@ var MovieStore = assign({}, EventEmitter.prototype, {
     addChangeListener: function(callback) {
         this.on(CHANGE_EVENT, callback);
     },
-    addReviewChangeListener: function(callback) {
-        this.on(REVIEWCHANGE_EVENT, callback);
-    },
-
     /**
      * @param {function} callback
      */
     removeChangeListener: function(callback) {
         this.removeListener(CHANGE_EVENT, callback);
-    },
-    removeReviewChangeListener: function(callback) {
-        this.removeListener(REVIEWCHANGE_EVENT, callback);
     }
 });
 
@@ -178,6 +174,10 @@ AppDispatcher.register(function(action){
         break;
     case MovieConstants.SEARCH_MOVIES:
         MovieStore.doSearch(action.data.query, action.data.tags,action.data.sortBy);
+        MovieStore.emitChange();
+        break;
+    case MovieConstants.SUBMIT_REVIEW:
+        MovieStore.submit_review(action.movie, action.reviewData);
         MovieStore.emitChange();
         break;
     default:

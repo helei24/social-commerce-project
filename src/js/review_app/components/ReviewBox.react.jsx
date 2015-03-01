@@ -53,7 +53,7 @@ var ReviewBox = React.createClass({
             description = this.state.movie.description;
         } 
         var reviewWidget =
-        <div className="col-md-12" id="review-widget">
+        <div className="col-md-10 col-md-offset-2 col-xs-12" id="review-widget">
             <div className="row">
                 <div className="col-md-12 text-right" style={{paddingRight: '0px', right: '-4px'}}>
                     <button className="btn btn-default" onClick={this.closeReviewBox}><i className="fa fa-times"></i></button>
@@ -69,7 +69,7 @@ var ReviewBox = React.createClass({
             <div className="row inner">
 
                 <div className="col-md-3">
-                    <img src={this.state.movie.image_path} alt={this.state.movie.name}/>
+                    <img src={this.state.movie.image_path} alt={this.state.movie.name} className="movie-image"/>
                 </div>
 
                 <div className="col-md-3">
@@ -82,7 +82,7 @@ var ReviewBox = React.createClass({
                 </div>
 
                 <div className="col-md-6">
-                    <ReviewForm reviewElements={this.props.reviewElements}/>
+                    <ReviewForm movie={this.state.movie} reviewElements={this.props.reviewElements}/>
                 </div>
             </div>
         </div>

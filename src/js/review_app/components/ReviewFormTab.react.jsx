@@ -2,9 +2,9 @@ var React = require('react/addons');
 
 var ReviewFormTab = React.createClass({
     render: function(){
-        var className = "tab-pane";
+        var className = "tab-pane fade";
         if(this.props.active){
-            className+= " active";
+            className+= " in active";
         }
         var categories = this.props.data.map(function(d, i){
 
@@ -20,7 +20,7 @@ var ReviewFormTab = React.createClass({
             return (
                 <div key={i}>
                     <h4>{d.name}</h4>
-                    <div data-toggle="buttons">
+                    <div data-toggle="buttons" className="btn-group">
                         {elements}
                     </div>
                 </div>

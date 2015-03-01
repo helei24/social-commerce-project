@@ -1,7 +1,13 @@
 var React = require('react/addons');
 var ReviewFormTab = require('./ReviewFormTab.react.jsx');
+var MovieActions = require("../actions/MovieActions");
 
 var ReviewForm = React.createClass({
+    reviewData: {},
+    submitReview: function(){
+        MovieActions.submitReview(this.props.movie, this.reviewData);  
+        MovieActions.closeReviewBox();  
+    },
     render: function(){
         var tabs = this.props.reviewElements.tabElements.map(function(re, i){
             var href = "#tab" + i;
@@ -30,8 +36,17 @@ var ReviewForm = React.createClass({
                         {tabContent}
                     </div>
                 </div>
-                    <textarea className="form-comments" placeholder="Your comments" rows="3"></textarea>
-                    <button className="btn btn-success submit-button">Submit</button>
+                <hr />
+                <textarea className="form-comments" placeholder="Your comments" rows="3"></textarea>
+                <div data-toggle="buttons" id="recommend">
+                    <label className="btn btn-default btn-lg">
+                        <input type="checkbox" autocomplete="off"/>
+                        I recommend it!
+                    </label>
+                </div>
+                <div id="submit-container">
+                    <button className="btn btn-success" id="submit-button" onClick={this.submitReview}>Submit</button>
+                </div>
             </div>
         )
     }
