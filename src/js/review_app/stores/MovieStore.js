@@ -14,7 +14,9 @@ var _perPage,
     _moviesOriginal,
     _tags,
     _numberOfReviews,
-    _movies;
+    _movies,
+    _dontSlick,
+    _reviewedPage;
 
 /**
 * Takes an array of movies and a number and
@@ -41,18 +43,35 @@ function getNumberOfReviewedMovies(movies){
     return count;
 }
 
+function getPageNumber(movie){
+    for(var i=0,l=_movies.length;i<l;i++){
+        if(movie.id===_movies[i].id){
+            var page = Math.floor(i/_perPage);
+            return page;
+        }
+    }
+}
+
 var MovieStore = assign({}, EventEmitter.prototype, {
     //called by root component at startup
     init: function(movies, tags){
         _moviesOriginal = movies;
         _sortBy = 'Random';
         _perPage = 10;
+        _dontSlick = false;
+        _reviewedPage = null;
         _tags = tags.map(function(t){
             return {name: t, isChecked: false}; 
         });
         _numberOfReviews = getNumberOfReviewedMovies(_moviesOriginal);
         _movies = _moviesOriginal.slice();
         
+    },
+    getReviewedPage: function(){
+        return _reviewedPage;
+    },
+    setReviewedPage: function(val){
+        _reviewedPage = val;  
     },
     getMovieFromId: function(id){
         for(var i=0, l=_moviesOriginal.length;i<l;i++){
@@ -70,7 +89,8 @@ var MovieStore = assign({}, EventEmitter.prototype, {
     },
     getProducts: function(){
         return {
-            products: getPaginatedMovies(_movies, _perPage)
+            products: getPaginatedMovies(_movies, _perPage),
+            dontSlick: _dontSlick
         };
     },
     getTags: function(){
@@ -130,24 +150,13 @@ var MovieStore = assign({}, EventEmitter.prototype, {
     shuffleMovies: function(){
         _movies = _.shuffle(_movies);       
     },
+    setDontSlick: function(val){
+        _dontSlick  = val; 
+    },
     submit_review: function(movie, reviewData){
-        // var $ajaxLoader = $('<img id="ajax-loader" class="ajax-loader"/>');
-        // $ajaxLoader.attr('src', '/static/images/ajax-loader.gif');
-        // var $submitContainer = $('#submit-container');
-        // $submitContainer.append($ajaxLoader);
-       //SEND REVIEW WITH AJAX IN THE ACTIONS
-
-        //MODIFIY THE MOVIE TO TRUE
+        _dontSlick = true;
+        _reviewedPage = getPageNumber(movie);
         movie.reviewed = true;
-        // assign(_moviesOriginal, movie);
-        // for(var i=0, l=_moviesOriginal.length; i<l; i++){
-        //     if(movie.id === _moviesOriginal[i].id){
-        //         _moviesOriginal[i].reviewed = true;
-        //         break;
-        //     }
-        // }
-        // $ajaxloader.remove();
-        //now we can close
     },
     emitChange: function() {
         this.emit(CHANGE_EVENT);

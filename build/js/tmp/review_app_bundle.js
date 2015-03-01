@@ -32323,11 +32323,20 @@ var MoviePage = React.createClass({displayName: "MoviePage",
     },
     componentWillUpdate: function(){
     },
+    shouldComponentUpdate: function(nextProps, nextStates){
+        if(MovieStore.getReviewedPage() ===
+            nextProps.id ||
+            MovieStore.getReviewedPage() ===
+            null)
+            return true;
+        console.log("page wasnt updated");
+        return false;
+    },
     render: function(){
         var movies = this.props.movies.map(function(m, i){
-           return(
-               React.createElement(Movie, {data: m, key: i})
-           );
+            return(
+                React.createElement(Movie, {data: m, key: i})
+            );
         }.bind(this));
         return(
             React.createElement("div", {className: "movie-page"}, 
@@ -32366,11 +32375,23 @@ var MoviesContainer = React.createClass({displayName: "MoviesContainer",
         MovieStore.addChangeListener(this._onChange);
         $('#slick-it').slick(slickOptions);
     },
-    componentWillUpdate: function(){
-        $('#slick-it').slick('unslick');
+    componentWillUpdate: function(nextProps, nextState){
+        //in case we are rerendering but we dont need to slick again
+        //like if only set a movie to reviewed
+        //so we dont unslick
+        //see componentDidUpdate
+        if(!nextState.dontSlick)
+            $('#slick-it').slick('unslick');
     },
-    componentDidUpdate: function(){
-        $('#slick-it').slick(slickOptions);
+    componentDidUpdate: function(prevProps, prevState){
+        //we always set back _reviewdPage to null because we might be done updating
+        //after reviewing a movie
+        MovieStore.setReviewedPage(null);
+        //in case we are rerendering but we dont need to slick again
+        if(!this.state.dontSlick)
+            $('#slick-it').slick(slickOptions);
+        //we set it back to false because slicking is default behavior
+        MovieStore.setDontSlick(false);
     },
     componentWillUnmount: function(){
         MovieStore.removeChangeListener(this._onChange);
@@ -32382,7 +32403,7 @@ var MoviesContainer = React.createClass({displayName: "MoviesContainer",
     render: function(){
         var moviePages = this.state.products.map(function(mp, i){
             return(
-                React.createElement(MoviePage, {movies: mp, key: i})
+                React.createElement(MoviePage, {movies: mp, key: i, id: i})
             );
         }.bind(this));
 
@@ -32773,7 +32794,9 @@ var _perPage,
     _moviesOriginal,
     _tags,
     _numberOfReviews,
-    _movies;
+    _movies,
+    _dontSlick,
+    _reviewedPage;
 
 /**
 * Takes an array of movies and a number and
@@ -32800,18 +32823,35 @@ function getNumberOfReviewedMovies(movies){
     return count;
 }
 
+function getPageNumber(movie){
+    for(var i=0,l=_movies.length;i<l;i++){
+        if(movie.id===_movies[i].id){
+            var page = Math.floor(i/_perPage);
+            return page;
+        }
+    }
+}
+
 var MovieStore = assign({}, EventEmitter.prototype, {
     //called by root component at startup
     init: function(movies, tags){
         _moviesOriginal = movies;
         _sortBy = 'Random';
         _perPage = 10;
+        _dontSlick = false;
+        _reviewedPage = null;
         _tags = tags.map(function(t){
             return {name: t, isChecked: false}; 
         });
         _numberOfReviews = getNumberOfReviewedMovies(_moviesOriginal);
         _movies = _moviesOriginal.slice();
         
+    },
+    getReviewedPage: function(){
+        return _reviewedPage;
+    },
+    setReviewedPage: function(val){
+        _reviewedPage = val;  
     },
     getMovieFromId: function(id){
         for(var i=0, l=_moviesOriginal.length;i<l;i++){
@@ -32829,7 +32869,8 @@ var MovieStore = assign({}, EventEmitter.prototype, {
     },
     getProducts: function(){
         return {
-            products: getPaginatedMovies(_movies, _perPage)
+            products: getPaginatedMovies(_movies, _perPage),
+            dontSlick: _dontSlick
         };
     },
     getTags: function(){
@@ -32889,24 +32930,13 @@ var MovieStore = assign({}, EventEmitter.prototype, {
     shuffleMovies: function(){
         _movies = _.shuffle(_movies);       
     },
+    setDontSlick: function(val){
+        _dontSlick  = val; 
+    },
     submit_review: function(movie, reviewData){
-        // var $ajaxLoader = $('<img id="ajax-loader" class="ajax-loader"/>');
-        // $ajaxLoader.attr('src', '/static/images/ajax-loader.gif');
-        // var $submitContainer = $('#submit-container');
-        // $submitContainer.append($ajaxLoader);
-       //SEND REVIEW WITH AJAX IN THE ACTIONS
-
-        //MODIFIY THE MOVIE TO TRUE
+        _dontSlick = true;
+        _reviewedPage = getPageNumber(movie);
         movie.reviewed = true;
-        // assign(_moviesOriginal, movie);
-        // for(var i=0, l=_moviesOriginal.length; i<l; i++){
-        //     if(movie.id === _moviesOriginal[i].id){
-        //         _moviesOriginal[i].reviewed = true;
-        //         break;
-        //     }
-        // }
-        // $ajaxloader.remove();
-        //now we can close
     },
     emitChange: function() {
         this.emit(CHANGE_EVENT);
