@@ -32381,7 +32381,7 @@ var MoviesContainer = React.createClass({displayName: "MoviesContainer",
         return(
             React.createElement("div", {className: "movie-pages col-md-9"}, 
                 React.createElement("div", {className: "row"}, 
-                    React.createElement(ReviewBox, null)
+                    React.createElement(ReviewBox, {reviewElements: this.props.reviewElements})
                 ), 
                 React.createElement("div", {id: "arrows", className: "will-fade"}), 
                 React.createElement("div", {id: "slick-it", className: "will-fade"}, 
@@ -32417,7 +32417,7 @@ var ReviewApp = React.createClass({displayName: "ReviewApp",
         return(
             React.createElement("div", {className: "review-app row", id: "review-app-inner"}, 
                 React.createElement(SideBar, null), 
-                React.createElement(MoviesContainer, null)
+                React.createElement(MoviesContainer, {reviewElements: this.props.reviewElements})
             )
         );
     }
@@ -32429,34 +32429,99 @@ module.exports = ReviewApp;
 
 },{"../actions/MovieActions":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/actions/MovieActions.js","../stores/MovieStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/MovieStore.js","../stores/ReviewBoxStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/ReviewBoxStore.js","./MoviesContainer.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/MoviesContainer.react.jsx","./ReviewBox.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewBox.react.jsx","./SideBar.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/SideBar.react.jsx","object-assign":"/Users/Felix/Documents/social_commerce_project/node_modules/object-assign/index.js","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewBox.react.jsx":[function(require,module,exports){
 var React = require('react/addons');
+var ReviewForm = require("./ReviewForm.react.jsx");
 var CSSTransitionGroup = React.addons.CSSTransitionGroup;
 var ReviewBoxStore = require('../stores/ReviewBoxStore');
+var MovieActions = require('../actions/MovieActions');
 
 function getReviewState(){
     return ReviewBoxStore.getReviewState();
 }
 
 var ReviewBox = React.createClass({displayName: "ReviewBox",
+    popoverOptions: {
+        trigger: 'hover',
+        placement: 'auto',
+        container: '#review-widget'
+    },
     getInitialState: function(){
         return getReviewState();
     },
     _onChange: function(){
         this.setState(getReviewState());
     },
+    closeReviewBox: function(){
+        MovieActions.closeReviewBox();  
+    },
     componentDidMount: function(){
+
         ReviewBoxStore.addChangeListener(this._onChange);
     },
     componentWillUnmount:function(){
         ReviewBoxStore.removeReviewChangeListener(this._onChange);
     },
+    componentDidUpdate: function(){
+        //we add the popover
+        if(this.state.open && this.state.movie.doCropDescription){
+            $(this.refs.description.getDOMNode())
+                  .popover(this.popoverOptions);
+        }
+    },
+    componentWillUpdate: function(){
+        //we remove the popover if the state is open (not yet updated)
+        if(this.state.open && this.refs.description && this.state.movie.doCropDescription){
+            $(this.refs.description.getDOMNode())
+                  .popover('destroy');
+        }
+    },
     render: function(){
-        var reviewWidget = React.createElement("div", {className: "col-xs-8 col-xs-offset-2", id: "review-widget"});
+        var description = '';
+        if(this.state.movie.doCropDescription){
+            description = this.state.movie.cropDescription;
+        } 
+        else{
+            description = this.state.movie.description;
+        } 
+        var reviewWidget =
+        React.createElement("div", {className: "col-md-12", id: "review-widget"}, 
+            React.createElement("div", {className: "row"}, 
+                React.createElement("div", {className: "col-md-12 text-right", style: {paddingRight: '0px', right: '-4px'}}, 
+                    React.createElement("button", {className: "btn btn-default", onClick: this.closeReviewBox}, React.createElement("i", {className: "fa fa-times"}))
+                )
+            ), 
+
+            React.createElement("div", {className: "row"}, 
+                React.createElement("div", {className: "col-md-12 text-center"}, 
+                    React.createElement("h2", {className: "movie-name"}, this.state.movie.name)
+                )
+            ), 
+
+            React.createElement("div", {className: "row inner"}, 
+
+                React.createElement("div", {className: "col-md-3"}, 
+                    React.createElement("img", {src: this.state.movie.image_path, alt: this.state.movie.name})
+                ), 
+
+                React.createElement("div", {className: "col-md-3"}, 
+                    React.createElement("h4", null, "Release date"), 
+                    React.createElement("p", null, this.state.movie.caracteristic_1), 
+                    React.createElement("h4", null, "Tags"), 
+                    React.createElement("p", null, this.state.movie.tags.join(", ")), 
+                    React.createElement("h4", null, "Overview"), 
+                    React.createElement("p", {className: "description", ref: "description", "data-toggle": "popover", "data-content": this.state.movie.description}, description)
+                ), 
+
+                React.createElement("div", {className: "col-md-6"}, 
+                    React.createElement(ReviewForm, {reviewElements: this.props.reviewElements})
+                )
+            )
+        )
         return(
 
-                React.createElement(CSSTransitionGroup, {transitionName: "example"}, 
-                    this.state.open ? reviewWidget : null
-                )
+        React.createElement(CSSTransitionGroup, {transitionName: "example"}, 
+            this.state.open ? reviewWidget : null
         )
+        );
         
     }
 });
@@ -32465,7 +32530,92 @@ module.exports = ReviewBox;
 
 
 
-},{"../stores/ReviewBoxStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/ReviewBoxStore.js","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/SideBar.react.jsx":[function(require,module,exports){
+},{"../actions/MovieActions":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/actions/MovieActions.js","../stores/ReviewBoxStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/ReviewBoxStore.js","./ReviewForm.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewForm.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewForm.react.jsx":[function(require,module,exports){
+var React = require('react/addons');
+var ReviewFormTab = require('./ReviewFormTab.react.jsx');
+
+var ReviewForm = React.createClass({displayName: "ReviewForm",
+    render: function(){
+        var tabs = this.props.reviewElements.tabElements.map(function(re, i){
+            var href = "#tab" + i;
+            return (
+                React.createElement("li", {className: i===0? "active" : "", key: i}, 
+                    React.createElement("a", {href: href, "data-toggle": "tab"}, 
+                        re.text
+                    )
+                )
+            );
+        });
+        console.log(tabs);
+        var tabContent = this.props.reviewElements.tabElements.map(function(re, i){
+            var id = "tab" + i;
+            return(
+                React.createElement(ReviewFormTab, {active: i === 0 ? true : false, data: re.categories, id: id, key: i})
+            );
+        });
+        return (
+            React.createElement("div", null, 
+                React.createElement("div", {role: "tabpanel", className: "tab-panel"}, 
+                    React.createElement("ul", {className: "nav nav-tabs", role: "tablist"}, 
+                        tabs
+                    ), 
+                    React.createElement("div", {className: "tab-content"}, 
+                        tabContent
+                    )
+                ), 
+                    React.createElement("textarea", {className: "form-comments", placeholder: "Your comments", rows: "3"}), 
+                    React.createElement("button", {className: "btn btn-success submit-button"}, "Submit")
+            )
+        )
+    }
+});
+
+module.exports = ReviewForm;
+
+
+
+},{"./ReviewFormTab.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewFormTab.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/ReviewFormTab.react.jsx":[function(require,module,exports){
+var React = require('react/addons');
+
+var ReviewFormTab = React.createClass({displayName: "ReviewFormTab",
+    render: function(){
+        var className = "tab-pane";
+        if(this.props.active){
+            className+= " active";
+        }
+        var categories = this.props.data.map(function(d, i){
+
+            var elements = d.elements.map(function(e, j){
+                return (
+                    React.createElement("label", {className: "btn btn-default", key: j}, 
+                        React.createElement("input", {type: "checkbox", autocomplete: "off"}), 
+                        e
+                    )
+                );
+            });
+
+            return (
+                React.createElement("div", {key: i}, 
+                    React.createElement("h4", null, d.name), 
+                    React.createElement("div", {"data-toggle": "buttons"}, 
+                        elements
+                    )
+                )
+            );
+        });
+        return(
+            React.createElement("div", {className: className, id: this.props.id}, 
+                categories
+            )
+        );
+    }
+});
+
+module.exports = ReviewFormTab;
+
+
+
+},{"react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/components/SideBar.react.jsx":[function(require,module,exports){
 var React = require('react/addons');
 var MovieStore = require('../stores/MovieStore');
 var MovieActions = require('../actions/MovieActions');
@@ -32630,16 +32780,16 @@ function createReview(data){
     // AJAX CALL TO CREATE A NEW REVIEW
 }
 
-function updateMovie(id, updates){
+// function updateMovie(id, updates){
     
-    _movies[id] = assign({}, _movies[id], updates);
-}
+//     _movies[id] = assign({}, _movies[id], updates);
+// }
 
-function updateAllMovies(updates){
-    for(var id in _movies){
-        update(id, updates);
-    }
-}
+// function updateAllMovies(updates){
+//     for(var id in _movies){
+//         update(id, updates);
+//     }
+// }
 
 var MovieStore = assign({}, EventEmitter.prototype, {
     //called by root component at startup
@@ -32653,6 +32803,13 @@ var MovieStore = assign({}, EventEmitter.prototype, {
         _numberOfReviews = getNumberOfReviewedMovies(_moviesOriginal);
         _movies = _moviesOriginal.slice();
         
+    },
+    getMovieFromId: function(id){
+        for(var i=0, l=_moviesOriginal.length;i<l;i++){
+            if(_moviesOriginal[i].id === id){
+                return _moviesOriginal[i];
+            }
+        }
     },
     getAllData: function() {
         return {
@@ -32771,6 +32928,7 @@ module.exports = MovieStore;
 },{"../constants/MovieConstants":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/constants/MovieConstants.js","../dispatcher/AppDispatcher":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/dispatcher/AppDispatcher.js","events":"/Users/Felix/Documents/social_commerce_project/node_modules/browserify/node_modules/events/events.js","lodash":"/Users/Felix/Documents/social_commerce_project/node_modules/lodash/index.js","object-assign":"/Users/Felix/Documents/social_commerce_project/node_modules/object-assign/index.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/ReviewBoxStore.js":[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var MovieActions = require('../actions/MovieActions');
+var MovieStore = require('./MovieStore');
 var EventEmitter = require('events').EventEmitter;
 var MovieConstants = require('../constants/MovieConstants');
 var assign = require('object-assign');
@@ -32780,13 +32938,27 @@ var CHANGE_EVENT = 'change';
 var _reviewBox,
     $willFade,
     $reviewApp,
-    $overlay;
+    $overlay,
+    _cropLength,
+    _reviewButtons;
 
 var ReviewBoxStore = assign({}, EventEmitter.prototype, {
     init: function(){
+        _cropLength = 150;
         _reviewBox = {
-            id: undefined,
-            open: false
+            movie: {
+                name: '',
+                image_path: '',
+                caracteristic_1: '',
+                caracteristic_2: '',
+                tags: [],
+                description: '',
+                cropDescription: '',
+                doCropDescription: false
+            },
+            open: false,
+            showChildBox: false,
+            children: []
         };
         $(function(){
             $willFade = $('.will-fade');
@@ -32803,8 +32975,15 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
     openReviewBox: function(id){
         $overlay.show();
         $willFade.addClass('fade');
-        _reviewBox.id = id;
+        _reviewBox.movie = MovieStore.getMovieFromId(id);
         _reviewBox.open = true;
+
+        if(_reviewBox.movie.description.length > _cropLength){
+            _reviewBox.movie.doCropDescription= true;
+            _reviewBox.movie.cropDescription =_reviewBox.movie.description.substring(0, _cropLength) + "...";
+        } else {
+            _reviewBox.movie.doCropDescription = false;
+        }
     },
     closeReviewBox: function(){
         $willFade.removeClass('fade');
@@ -32849,7 +33028,7 @@ module.exports = ReviewBoxStore;
 
 
 
-},{"../actions/MovieActions":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/actions/MovieActions.js","../constants/MovieConstants":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/constants/MovieConstants.js","../dispatcher/AppDispatcher":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/dispatcher/AppDispatcher.js","events":"/Users/Felix/Documents/social_commerce_project/node_modules/browserify/node_modules/events/events.js","lodash":"/Users/Felix/Documents/social_commerce_project/node_modules/lodash/index.js","object-assign":"/Users/Felix/Documents/social_commerce_project/node_modules/object-assign/index.js"}],"review_app_bundle":[function(require,module,exports){
+},{"../actions/MovieActions":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/actions/MovieActions.js","../constants/MovieConstants":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/constants/MovieConstants.js","../dispatcher/AppDispatcher":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/dispatcher/AppDispatcher.js","./MovieStore":"/Users/Felix/Documents/social_commerce_project/src/js/review_app/stores/MovieStore.js","events":"/Users/Felix/Documents/social_commerce_project/node_modules/browserify/node_modules/events/events.js","lodash":"/Users/Felix/Documents/social_commerce_project/node_modules/lodash/index.js","object-assign":"/Users/Felix/Documents/social_commerce_project/node_modules/object-assign/index.js"}],"review_app_bundle":[function(require,module,exports){
 var React = require('react/addons');
 var ReviewApp = require('./components/ReviewApp.react.jsx');
 

@@ -1,5 +1,6 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var MovieActions = require('../actions/MovieActions');
+var MovieStore = require('./MovieStore');
 var EventEmitter = require('events').EventEmitter;
 var MovieConstants = require('../constants/MovieConstants');
 var assign = require('object-assign');
@@ -9,13 +10,27 @@ var CHANGE_EVENT = 'change';
 var _reviewBox,
     $willFade,
     $reviewApp,
-    $overlay;
+    $overlay,
+    _cropLength,
+    _reviewButtons;
 
 var ReviewBoxStore = assign({}, EventEmitter.prototype, {
     init: function(){
+        _cropLength = 150;
         _reviewBox = {
-            id: undefined,
-            open: false
+            movie: {
+                name: '',
+                image_path: '',
+                caracteristic_1: '',
+                caracteristic_2: '',
+                tags: [],
+                description: '',
+                cropDescription: '',
+                doCropDescription: false
+            },
+            open: false,
+            showChildBox: false,
+            children: []
         };
         $(function(){
             $willFade = $('.will-fade');
@@ -32,8 +47,15 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
     openReviewBox: function(id){
         $overlay.show();
         $willFade.addClass('fade');
-        _reviewBox.id = id;
+        _reviewBox.movie = MovieStore.getMovieFromId(id);
         _reviewBox.open = true;
+
+        if(_reviewBox.movie.description.length > _cropLength){
+            _reviewBox.movie.doCropDescription= true;
+            _reviewBox.movie.cropDescription =_reviewBox.movie.description.substring(0, _cropLength) + "...";
+        } else {
+            _reviewBox.movie.doCropDescription = false;
+        }
     },
     closeReviewBox: function(){
         $willFade.removeClass('fade');

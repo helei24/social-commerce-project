@@ -43,16 +43,16 @@ function createReview(data){
     // AJAX CALL TO CREATE A NEW REVIEW
 }
 
-function updateMovie(id, updates){
+// function updateMovie(id, updates){
     
-    _movies[id] = assign({}, _movies[id], updates);
-}
+//     _movies[id] = assign({}, _movies[id], updates);
+// }
 
-function updateAllMovies(updates){
-    for(var id in _movies){
-        update(id, updates);
-    }
-}
+// function updateAllMovies(updates){
+//     for(var id in _movies){
+//         update(id, updates);
+//     }
+// }
 
 var MovieStore = assign({}, EventEmitter.prototype, {
     //called by root component at startup
@@ -66,6 +66,13 @@ var MovieStore = assign({}, EventEmitter.prototype, {
         _numberOfReviews = getNumberOfReviewedMovies(_moviesOriginal);
         _movies = _moviesOriginal.slice();
         
+    },
+    getMovieFromId: function(id){
+        for(var i=0, l=_moviesOriginal.length;i<l;i++){
+            if(_moviesOriginal[i].id === id){
+                return _moviesOriginal[i];
+            }
+        }
     },
     getAllData: function() {
         return {
