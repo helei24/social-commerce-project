@@ -2,7 +2,7 @@ var React = require('react/addons');
 var ReviewForm = require("./ReviewForm.react.jsx");
 var CSSTransitionGroup = React.addons.CSSTransitionGroup;
 var ReviewBoxStore = require('../stores/ReviewBoxStore');
-var MovieActions = require('../actions/MovieActions');
+var ProductActions = require('../actions/ProductActions');
 
 
 function getReviewState(){
@@ -26,7 +26,7 @@ var ReviewBox = React.createClass({
         this.setState(getReviewState());
     },
     closeReviewBox: function(){
-        MovieActions.closeReviewBox();  
+        ProductActions.closeReviewBox();  
     },
     componentDidMount: function(){
 
@@ -38,25 +38,25 @@ var ReviewBox = React.createClass({
     componentDidUpdate: function(){
         //we add the popover
         var timeout;
-        if(this.state.open && this.state.movie.doCropDescription){
+        if(this.state.open && this.state.product.doCropDescription){
             $(this.refs.description.getDOMNode())
                   .popover(this.popoverOptions);
         }
     },
     componentWillUpdate: function(){
         //we remove the popover if the state is open (not yet updated)
-        if(this.state.open && this.refs.description && this.state.movie.doCropDescription){
+        if(this.state.open && this.refs.description && this.state.product.doCropDescription){
             $(this.refs.description.getDOMNode())
                   .popover('destroy');
         }
     },
     render: function(){
         var description = '';
-        if(this.state.movie.doCropDescription){
-            description = this.state.movie.cropDescription;
+        if(this.state.product.doCropDescription){
+            description = this.state.product.cropDescription;
         } 
         else{
-            description = this.state.movie.description;
+            description = this.state.product.description;
         } 
         var reviewWidget =
         <div className="col-xs-10 col-xs-offset-2 col-xs-12" id="review-widget">
@@ -68,27 +68,27 @@ var ReviewBox = React.createClass({
 
             <div className="row">
                 <div className="col-xs-12 text-center">
-                    <h2 className="movie-name">{this.state.movie.name}</h2>
+                    <h2 className="product-name">{this.state.product.name}</h2>
                 </div>
             </div>
 
             <div className="row inner">
 
                 <div className="col-xs-3">
-                    <img src={this.state.movie.image_path} alt={this.state.movie.name} className="movie-image"/>
+                    <img src={this.state.product.image_path} alt={this.state.product.name} className="product-image"/>
                 </div>
 
                 <div className="col-xs-3">
                     <h4>Release date</h4>
-                    <p>{this.state.movie.caracteristic_1}</p>
+                    <p>{this.state.product.caracteristic_1}</p>
                     <h4>Tags</h4>
-                    <p>{this.state.movie.tags.join(", ")}</p>
+                    <p>{this.state.product.tags.join(", ")}</p>
                     <h4>Overview</h4>
-                    <p className="description" ref="description" data-toggle="popover" data-content={this.state.movie.description}>{description}</p>
+                    <p className="description" ref="description" data-toggle="popover" data-content={this.state.product.description}>{description}</p>
                 </div>
 
                 <div className="col-xs-6">
-                    <ReviewForm movie={this.state.movie} reviewElements={this.props.reviewElements}/>
+                    <ReviewForm product={this.state.product} reviewElements={this.props.reviewElements}/>
                 </div>
             </div>
         </div>

@@ -66,7 +66,7 @@ $product-images-height-normal: 136px;
                         padding-bottom: 15px;
                         margin: 5px;
                         text-align:center;
-                        //movie title
+                        //product title
                         h5 {
                             padding: 5px;
                             margin-bottom: 15px;
@@ -125,7 +125,7 @@ $product-images-height-normal: 136px;
             border: 1px solid rgb(221, 221, 221);
             @include box-shadow(10px 10px 49px 0px rgba(0,0,0,0.09));
             //The animation when the widget comes in!
-            .movie-image {
+            .product-image {
                 width: 90%;
             }
             .ajax-loader {
