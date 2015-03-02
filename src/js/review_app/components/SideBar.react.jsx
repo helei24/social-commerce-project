@@ -74,7 +74,7 @@ var SideBar = React.createClass({
             );
         }.bind(this));
         return(
-            <div className="side-bar col-md-3 will-fade">
+            <div className="side-bar col-xs-3 will-fade">
                 <h4><i className="fa fa-search"></i> Search</h4>
                 <input id="input-search" ref="searchInput" type="text" onChange={this.textSearch}/>
                 <h4><i className="fa fa-sort"></i> Sort by</h4>

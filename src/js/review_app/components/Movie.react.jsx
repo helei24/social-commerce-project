@@ -9,7 +9,7 @@ var Movie = React.createClass({
         container: 'body'
     },
     cropName: false,
-    cropLength: 12,
+    cropLength: 14,
     componentDidMount: function(){
         if(this.cropName){
             $(this.refs.name.getDOMNode())
@@ -75,8 +75,8 @@ var Movie = React.createClass({
         }
 
         return(
-            <div className="movie">
-            <div className="movie-inner effect6">
+            <div className="product col-xs-15">
+            <div className="product-inner effect6">
                 <h5 className={opacityControl} ref="name" data-toggle="popover" data-content={this.props.data.name}>{name}</h5>
                 <div className="img-container">
                     {checkMark}

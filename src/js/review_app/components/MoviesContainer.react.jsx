@@ -56,7 +56,7 @@ var MoviesContainer = React.createClass({
         }.bind(this));
 
         return(
-            <div className="movie-pages col-md-9">
+            <div className="product-pages col-xs-9">
                 <div id="arrows" className="will-fade"></div>
                 <div id="slick-it" className="will-fade">
                     {moviePages}

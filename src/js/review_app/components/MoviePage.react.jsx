@@ -30,7 +30,7 @@ var MoviePage = React.createClass({
             );
         }.bind(this));
         return(
-            <div className="movie-page">
+            <div className="product-page">
                 {movies}
             </div>
         );
