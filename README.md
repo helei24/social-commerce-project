@@ -60,5 +60,6 @@ Now when a user logs in, a new friendship is created in the database if it doesn
 #### ~~Add share dialog with javascript sdk and ajax callback to update step count~~
 #### User-agent sniffing to prevent mobile users from using the app
 #### Add error handling for faulty ajax calls
-#### Change static files urls to dynamic urls to choose between dev and prod given a predefined setting
+#### Change static files urls to dynamic urls to choose between dev and prod given a predefined setting (template tag?)
+#### Write gulp tasks for prod (concatenation & minification)
 #### ...
