@@ -76,9 +76,9 @@
       top: 0px;
       background-color: #FFF;
       border: 1px solid #dddddd;
-      -webkit-box-shadow: 10px 10px 49px 0px rgba(0, 0, 0, 0.09);
-      -moz-box-shadow: 10px 10px 49px 0px rgba(0, 0, 0, 0.09);
-      box-shadow: 10px 10px 49px 0px rgba(0, 0, 0, 0.09); }
+      -webkit-box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
+      -moz-box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 2px 26px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.1); }
       #reviewapp #review-app-inner #review-widget .product-image {
         width: 90%; }
       #reviewapp #review-app-inner #review-widget .ajax-loader {
@@ -119,6 +119,11 @@
   -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset; }
+
+#overlay {
+  -moz-animation-duration: .3s;
+  -webkit-animation-duration: .3s;
+  animation-duration: .3s; }
 
 .will-fade {
   opacity: 1;

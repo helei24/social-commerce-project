@@ -33166,7 +33166,6 @@ var _reviewBox = {
     // The max length of the description
     _cropLength = 150,
     // The jQuery element containing the elements that will fade
-    $willFade,
     // The element we will prepend the overlay to
     $reviewApp,
     // The clickable overlay
@@ -33198,14 +33197,8 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
         // and the elements that need to fade on review box
         // opening
         $(function(){
-            $willFade = $('.will-fade');
             $reviewApp = $('#review-app-inner');
-            $overlay = $('<div id="overlay"></div>');
-            $overlay.click(function(){
-                ProductActions.closeReviewBox(); 
-            });
-            $overlay.hide();
-            $reviewApp.prepend($overlay);
+            $overlay = $('#overlay');
         });
 
     },
@@ -33221,9 +33214,10 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
 
         // The clickable overlay is shown
         $overlay.show();
+        $overlay.addClass("animated fadeIn");
 
         // We fade the elements with class will-fade
-        $willFade.addClass('fade');
+        // $willFade.addClass('fade');
 
         // We set the data
         _reviewBox.product = data;
@@ -33241,8 +33235,13 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
     },
 
     closeReviewBox: function(){
-        $willFade.removeClass('fade');
-        $overlay.hide();
+        $overlay.addClass("animated fadeOut");
+        $overlay.one(
+            'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+            function(){
+                $(this).hide();
+                $(this).removeClass();
+            });
         _reviewBox.open = false;
     },
     resetReviewData: function(){

@@ -14,15 +14,15 @@ particlesJS('particles-js', {
     },
     size: 6,
     size_random: true,
-    nb: 70,
+    nb: 50,
     line_linked: {
       enable_auto: true,
-      distance: 200,
+      distance: 300,
       color: '#5bc0de',
       opacity: 1,
       width: 1,
       condensed_mode: {
-        enable: false,
+        enable: true,
         rotateX: 600,
         rotateY: 600
       }
@@ -74,16 +74,22 @@ function shareTheProject(){
         method: 'share',
         href: 'http://www.google.com/'
     }, function(response){
-        if(response){
+        // The user posted successfully
+        if(response.hasOwnProperty('post_id')){
+            // lets increment his step to 4! he deserved it
             $.post('/phase1/shared/',
                    {msg: "shared"},
                    function(response){
                        $("#content-success").fadeIn(300);
                    });
         }
+        // He didn't! we show the first message agin
         else {
             $("#content").fadeIn(300);
         }
+    });
+    $(".fb_dialog_close_icon").one("click", function(){
+            $("#content").fadeIn(300);
     });
 }
 

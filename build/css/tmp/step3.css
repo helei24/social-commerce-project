@@ -5,8 +5,13 @@
   z-index: -1; }
 
 .content {
-  margin-top: 250px;
-  position: absolute; }
+  left: 50%;
+  width: 500px;
+  top: 50%;
+  height: 300px;
+  margin-top: -150px;
+  margin-left: -250px;
+  position: fixed; }
 
 #content-success {
   display: none; }

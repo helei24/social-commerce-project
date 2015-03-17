@@ -14,15 +14,15 @@ particlesJS('particles-js', {
     },
     size: 6,
     size_random: true,
-    nb: 70,
+    nb: 50,
     line_linked: {
       enable_auto: true,
-      distance: 200,
+      distance: 300,
       color: '#5bc0de',
       opacity: 1,
       width: 1,
       condensed_mode: {
-        enable: false,
+        enable: true,
         rotateX: 600,
         rotateY: 600
       }

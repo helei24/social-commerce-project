@@ -128,7 +128,7 @@ $product-images-height-normal: 136px;
             top: $review-widget-top;
             background-color: #FFF;
             border: 1px solid rgb(221, 221, 221);
-            @include box-shadow(10px 10px 49px 0px rgba(0,0,0,0.09));
+            @include box-shadow(0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1));
             //The animation when the widget comes in!
             .product-image {
                 width: 90%;
@@ -192,7 +192,12 @@ $product-images-height-normal: 136px;
         0 0 40px rgba(0,0,0,0.1) inset
     );
 }
+#overlay {
+    -moz-animation-duration: .3s;
+    -webkit-animation-duration: .3s;
+    animation-duration: .3s;
 
+}
 //used when the review widget comes in
 .will-fade{
     opacity: 1;
