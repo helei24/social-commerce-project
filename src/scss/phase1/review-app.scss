@@ -1,4 +1,4 @@
-@import 'mixins-and-variables';
+@import '../mixins-and-variables';
 
 $review-widget-top: 0px;
 $review-widget-top-init: $review-widget-top - 60px;
@@ -129,6 +129,13 @@ $product-images-height-normal: 136px;
             background-color: #FFF;
             border: 1px solid rgb(221, 221, 221);
             @include box-shadow(0 2px 26px rgba(0, 0, 0, .3), 0 0 0 1px rgba(0, 0, 0, .1));
+            .btn-danger{
+                margin-left: 5px;
+            }
+            .bottom-btn {
+                width: 75px;
+            }
+            
             //The animation when the widget comes in!
             .product-image {
                 width: 90%;
