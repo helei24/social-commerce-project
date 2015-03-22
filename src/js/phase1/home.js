@@ -1,21 +1,21 @@
-$(function(){
-    var $agreement = $("#agreement"),
-        $login = $("#login"),
-        $agreeCheckBox = $("#agree-checkbox"),
-        $alertAgree = $("#alert-agree"),
-        $logo = $("#logo");
-    $logo.show();
-    $agreement.show();
-    $logo.addClass("animated fadeIn");
-    $agreement.addClass("animated fadeIn");
-    $agreement.one(
-        'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
-        function(){
-            $(this).removeClass();
-        });
+// $(function(){
+//     var $agreement = $("#agreement"),
+//         $login = $("#login"),
+//         $agreeCheckBox = $("#agree-checkbox"),
+//         $alertAgree = $("#alert-agree"),
+//         $logo = $("#logo");
+//     $logo.show();
+//     $agreement.show();
+//     $logo.addClass("animated fadeIn");
+//     $agreement.addClass("animated fadeIn");
+//     $agreement.one(
+//         'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+//         function(){
+//             $(this).removeClass();
+//         });
 
     
-});
+// });
 
 function agreement(){
     var $agreement = $("#agreement"),

@@ -32270,7 +32270,7 @@ var Product = React.createClass({displayName: "Product",
         }
     },
     componentDidUpdate: function(){
-
+        console.log("product updated");
         // If the name is cropped, activate popover
         if(this.cropName)
             $(this.refs.name.getDOMNode())
@@ -32441,13 +32441,32 @@ var ReviewApp = React.createClass({displayName: "ReviewApp",
         return null;
     },
     componentDidMount: function(){
+        // ===== Scroll to Top ==== 
+        var canChange = true;
+        $(window).scroll(function() {
+            if ($(this).scrollTop() >= 500) {        // If page is scrolled more than 50px
+                    $('#return-to-top').css("display", "block");
+                    $('#return-to-top').addClass("fadeIn");
+                    $('#return-to-top').removeClass("fadeOut");
+                
+            } else {
+                    $('#return-to-top').addClass("fadeOut");
+                    $('#return-to-top').removeClass("fadeIn");
+            }
+        });
+        $('#return-to-top').click(function() {      // When arrow is clicked
+            $('body,html').animate({
+                scrollTop : 0                       // Scroll to top of body
+            }, 500);
+        });
     },
     render: function(){
         return(
             React.createElement("div", {className: "review-app clearfix", id: "review-app-inner"}, 
                 React.createElement(ReviewBox, null), 
                 React.createElement(SideBar, null), 
-                React.createElement(ProductsContainer, null)
+                React.createElement(ProductsContainer, null), 
+                React.createElement("a", {id: "return-to-top", className: "animated fadeOut"}, React.createElement("i", {className: "fa fa-chevron-up"}))
             )
         );
     }
@@ -33370,11 +33389,10 @@ var init = function init(data){
     }
     var images = [];
     for(var i=0; i<data.products.length; i++){
-        console.log(data.products[i].image_path);
         images.push(data.products[i].image_path);
     }
     preload.apply(this, images);
-    
+
     //Rendering of root component
     React.render(
         React.createElement(ReviewApp, data),

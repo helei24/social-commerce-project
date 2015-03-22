@@ -32247,6 +32247,7 @@ module.exports = ProductActions;
 var React = require('react/addons');
 var ProductActions = require('../actions/ProductActions');
 var ProductContainer = require('./ProductsContainer.react.jsx');
+var ProductStore = require('../stores/ProductStore');
 
 var Product = React.createClass({displayName: "Product",
 
@@ -32270,7 +32271,7 @@ var Product = React.createClass({displayName: "Product",
         }
     },
     componentDidUpdate: function(){
-
+        console.log("product updated");
         // If the name is cropped, activate popover
         if(this.cropName)
             $(this.refs.name.getDOMNode())
@@ -32289,6 +32290,19 @@ var Product = React.createClass({displayName: "Product",
             $(this.refs.name.getDOMNode()).popover('destroy');
     },
 
+    shouldComponentUpdate: function(nextProps, nextState){
+
+        if(nextProps.data.id === ProductStore.getLastReviewedId() ||
+                                     nextProps.data.id != this.props.data.id){
+            ProductStore.resetReviewedId();
+            return true;
+        }
+
+        /* if(this.props.data.title === nextProps.data.title)
+           return false; */
+        return false;
+        
+    },
     // Review the product
     reviewIt: function(){
         ProductActions.review(this.props.data);
@@ -32357,7 +32371,7 @@ module.exports = Product;
 
 
 
-},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","./ProductsContainer.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx":[function(require,module,exports){
+},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","../stores/ProductStore":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/stores/ProductStore.js","./ProductsContainer.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx":[function(require,module,exports){
 var React = require('react/addons');
 var CSSTransitionGroup = React.addons.CSSTransitionGroup;
 var Product = require("./Product.react.jsx")
@@ -32383,7 +32397,7 @@ var ProductsContainer = React.createClass({displayName: "ProductsContainer",
         ProductStore.addChangeListener(this._onChange);
         $(window).scroll(function() {
             // we add 100 for a little buffer!
-            if($(window).scrollTop() + $(window).height() >= ($(document).height() - 100)) {
+            if($(window).scrollTop() + $(window).height() >= $(document).height()) {
                 ProductActions.infiniteScroll();
             }
         });
@@ -32441,13 +32455,32 @@ var ReviewApp = React.createClass({displayName: "ReviewApp",
         return null;
     },
     componentDidMount: function(){
+        // ===== Scroll to Top ==== 
+        var canChange = true;
+        $(window).scroll(function() {
+            if ($(this).scrollTop() >= 500) {        // If page is scrolled more than 50px
+                    $('#return-to-top').css("display", "block");
+                    $('#return-to-top').addClass("fadeIn");
+                    $('#return-to-top').removeClass("fadeOut");
+                
+            } else {
+                    $('#return-to-top').addClass("fadeOut");
+                    $('#return-to-top').removeClass("fadeIn");
+            }
+        });
+        $('#return-to-top').click(function() {      // When arrow is clicked
+            $('body,html').animate({
+                scrollTop : 0                       // Scroll to top of body
+            }, 500);
+        });
     },
     render: function(){
         return(
             React.createElement("div", {className: "review-app clearfix", id: "review-app-inner"}, 
                 React.createElement(ReviewBox, null), 
                 React.createElement(SideBar, null), 
-                React.createElement(ProductsContainer, null)
+                React.createElement(ProductsContainer, null), 
+                React.createElement("a", {id: "return-to-top", className: "animated fadeOut"}, React.createElement("i", {className: "fa fa-chevron-up"}))
             )
         );
     }
@@ -32903,7 +32936,8 @@ var _sortBy = 'Random',
     _products,
     $doneOrNot = $("#done-or-not"),
     $numReviews = $('#num-reviews'),
-    _currentIndex = 15;
+    _currentIndex = 15,
+    _lastReviewedId;
 
 // Return the number of reviewed products by the current user
 function getNumberOfReviewedProducts(products){
@@ -32962,17 +32996,12 @@ var ProductStore = assign({}, EventEmitter.prototype, {
             });
         }
     },
-
-    // get the current reviewed page
-    getReviewedPage: function(){
-        return _reviewedPage;
+    getLastReviewedId: function(){
+        return _lastReviewedId;
     },
-
-    // set the current reviewing page to val
-    setReviewedPage: function(val){
-        _reviewedPage = val;  
+    resetReviewedId: function(id){
+        _lastReviewedId = undefined;
     },
-
     // get the product from id
     getProductFromId: function(id){
         for(var i=0, l=_productsOriginal.length;i<l;i++){
@@ -33062,7 +33091,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         _products = _.shuffle(_products);       
     },
     incrementCurrentIndex: function(){
-        _currentIndex += 5;
+        _currentIndex += 10;
         if(_currentIndex > _products.length){
             _currentIndex = _products.length;
         }
@@ -33076,6 +33105,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
             }
         }
         _num--;
+        _lastReviewedId = product.id;
 
         ReviewBoxStore.resetReviewData();
         this.updateReviewText();
@@ -33103,6 +33133,8 @@ var ProductStore = assign({}, EventEmitter.prototype, {
             comment: reviewData.comment,
             recommendIt: reviewData.recommendIt
         };
+
+        _lastReviewedId = product.id;
 
         ReviewBoxStore.resetReviewData();
         this.updateReviewText();
@@ -33370,11 +33402,10 @@ var init = function init(data){
     }
     var images = [];
     for(var i=0; i<data.products.length; i++){
-        console.log(data.products[i].image_path);
         images.push(data.products[i].image_path);
     }
     preload.apply(this, images);
-    
+
     //Rendering of root component
     React.render(
         React.createElement(ReviewApp, data),

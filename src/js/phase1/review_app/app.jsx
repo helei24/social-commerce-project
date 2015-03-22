@@ -12,7 +12,6 @@ var init = function init(data){
     }
     var images = [];
     for(var i=0; i<data.products.length; i++){
-        console.log(data.products[i].image_path);
         images.push(data.products[i].image_path);
     }
     preload.apply(this, images);

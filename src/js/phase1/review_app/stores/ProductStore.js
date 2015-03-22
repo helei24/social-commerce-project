@@ -17,7 +17,8 @@ var _sortBy = 'Random',
     _products,
     $doneOrNot = $("#done-or-not"),
     $numReviews = $('#num-reviews'),
-    _currentIndex = 15;
+    _currentIndex = 15,
+    _lastReviewedId;
 
 // Return the number of reviewed products by the current user
 function getNumberOfReviewedProducts(products){
@@ -76,17 +77,12 @@ var ProductStore = assign({}, EventEmitter.prototype, {
             });
         }
     },
-
-    // get the current reviewed page
-    getReviewedPage: function(){
-        return _reviewedPage;
+    getLastReviewedId: function(){
+        return _lastReviewedId;
     },
-
-    // set the current reviewing page to val
-    setReviewedPage: function(val){
-        _reviewedPage = val;  
+    resetReviewedId: function(id){
+        _lastReviewedId = undefined;
     },
-
     // get the product from id
     getProductFromId: function(id){
         for(var i=0, l=_productsOriginal.length;i<l;i++){
@@ -176,7 +172,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         _products = _.shuffle(_products);       
     },
     incrementCurrentIndex: function(){
-        _currentIndex += 5;
+        _currentIndex += 10;
         if(_currentIndex > _products.length){
             _currentIndex = _products.length;
         }
@@ -190,6 +186,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
             }
         }
         _num--;
+        _lastReviewedId = product.id;
 
         ReviewBoxStore.resetReviewData();
         this.updateReviewText();
@@ -217,6 +214,8 @@ var ProductStore = assign({}, EventEmitter.prototype, {
             comment: reviewData.comment,
             recommendIt: reviewData.recommendIt
         };
+
+        _lastReviewedId = product.id;
 
         ReviewBoxStore.resetReviewData();
         this.updateReviewText();

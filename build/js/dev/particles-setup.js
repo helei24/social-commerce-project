@@ -29,7 +29,7 @@ particlesJS('particles-js', {
     },
     anim: {
       enable: false,
-      speed: 1
+        speed: 0.6
     }
   },
   interactivity: {
