@@ -24,10 +24,9 @@ $(function(){
         closing = true,
         $overlay = $("#base-overlay"),
         $infoPopup = $("#info-popup");
-
-    $.scrollUp({
-        scrollDistance: 1 
-    });
+    // $.scrollUp({
+    //     scrollDistance: 1 
+    // });
 
     $infoButton.popover({
         placement: 'left'
