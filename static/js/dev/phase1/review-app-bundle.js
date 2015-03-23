@@ -32227,12 +32227,11 @@ var ProductActions = {
         });
     },
     // Search for products
-    doSearch: function(query, tags, sortBy){
+    doSearch: function(query, sortBy){
         AppDispatcher.dispatch({
             actionType: ProductConstants.SEARCH_PRODUCTS,
             data: {
                 query: query,
-                tags: tags,
                 sortBy: sortBy
             }
         });
@@ -32842,7 +32841,6 @@ var SideBar = React.createClass({displayName: "SideBar",
     doSearch: function(){
         ProductActions.doSearch(
             this.refs.searchInput.getDOMNode().value,
-            this.state.tags,
             this.refs.selectSort.getDOMNode().value
       )  
     },
@@ -32925,7 +32923,6 @@ var assign = require('object-assign');
 var _ = require('lodash');
 
 var CHANGE_EVENT = 'change';
-var REVIEWCHANGE_EVENT = 'change_review';
 
 // The initial sorting order
 var _sortBy = 'Random',
@@ -33027,14 +33024,13 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         };
     },
     // We execute a search query
-    doSearch: function(query, tags, sortBy) {
+    doSearch: function(query, sortBy) {
         // what will be returned
+        console.log(sortBy);
         var queryResult = [];
         var regex = new RegExp(query, "i");
-        var subset;
-
-        // we set the tags to change isChecked values
-        assign(_tags, tags);
+        var subset,
+            tags;
 
         // an array of tag names that are checked
         tags = _tags.filter(function(t){
@@ -33073,8 +33069,8 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         case "Release Year":
             queryResult.sort(function(a, b){
                 // Compare the 2 dates
-                if(a.caracteristic_1 < b.caracteristic_1) return -1;
-                if(a.caracteristic_1 > b.caracteristic_1) return 1;
+                if(a.caracteristic_1 > b.caracteristic_1) return -1;
+                if(a.caracteristic_1 < b.caracteristic_1) return 1;
                 return 0;
             });
             break;
@@ -33112,8 +33108,9 @@ var ProductStore = assign({}, EventEmitter.prototype, {
     },
     submit_review: function(product, reviewData){
 
+        if(!product.review)
         // we increment the number of reviews!
-        _num++;
+            _num++;
         
         // we update review state
         var boolAnswers = [];
@@ -33157,7 +33154,7 @@ AppDispatcher.register(function(action){
         ProductStore.emitChange();
         break;
     case ProductConstants.SEARCH_PRODUCTS:
-        ProductStore.doSearch(action.data.query, action.data.tags,action.data.sortBy);
+        ProductStore.doSearch(action.data.query, action.data.sortBy);
         ProductStore.emitChange();
         break;
     case ProductConstants.SUBMIT_REVIEW:
