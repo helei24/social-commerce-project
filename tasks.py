@@ -7,8 +7,16 @@ def deploy():
     print("what is your commit message")
     msg = input('>')
     run("git commit -am '{}'".format(msg))
-    run("git push origin master")
     run("git push webfaction master")
+
+
+@task
+def git():
+    run("git add -A .")
+    print("what is your commit message")
+    msg = input('>')
+    run("git commit -am '{}'".format(msg))
+    run("git push origin master")
 
 
 @task
