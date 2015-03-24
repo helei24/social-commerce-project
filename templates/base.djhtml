@@ -17,8 +17,8 @@
     </head>
     <body>
         <div id="overlay"></div>
-        <div id="particles-js">
-        </div>
+        <!-- <div id="particles-js">
+             </div> -->
         <div class="container">
             {% block body %}
             {% endblock %}

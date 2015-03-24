@@ -52,6 +52,9 @@
                             sollicitudin. Nunc auctor vitae massa vitae
                             sagittis. Donec hendrerit viverra justo, sit amet
                             maximus purus malesuada a.</p>
+                        <p id="login-error" class="alert alert-danger">
+                            There was an error, please retry.
+                        </p>
                         <div class="row" id="btn-row">
                             <div class='col-xs-12 text-center'>
                                 <a class="btn btn-info" href="{% provider_login_url "facebook" method="js_sdk" %}">Facebook Connect</a>
