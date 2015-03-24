@@ -32355,7 +32355,7 @@ var Product = React.createClass({displayName: "Product",
                 React.createElement("div", {className: "img-container"}, 
                     checkMark, 
                     React.createElement("div", {className: opacityControl}, 
-                        React.createElement("img", {src: this.props.data.image_path, alt: this.props.data.name})
+                        React.createElement("img", {src: this.props.data.sm_image_path, alt: this.props.data.name})
                     )
                 ), 
                 React.createElement("p", {className: opacityControl}, this.props.data.caracteristic_1), 
@@ -33393,7 +33393,7 @@ var init = function init(data){
         var imagesTemp = [];
         for (var i = 0, l=sources.length; i < l; i++) {
             imagesTemp[i] = new Image();
-	    imagesTemp[i].src = sources[i].image_path;
+	    imagesTemp[i].src = sources[i].image_path_min;
         }
     }
     preload(data.products);

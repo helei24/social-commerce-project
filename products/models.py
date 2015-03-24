@@ -88,6 +88,8 @@ class CustomProductManager(models.Manager):
             p['tags'] = p_tags
 
             # augment path
+            p['sm_image_path'] = static('images/products/small/' +
+                                        p['image_path'])
             p['image_path'] = static('images/products/' + p['image_path'])
 
         return json.dumps(products)
