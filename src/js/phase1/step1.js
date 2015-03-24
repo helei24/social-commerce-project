@@ -27,6 +27,24 @@ $(function(){
     // $.scrollUp({
     //     scrollDistance: 1 
     // });
+        function imagesLoaded(){
+            console.log("image preloaded");
+        }
+        var images = [];
+        function preload(sources) {
+            var imagesTemp = [];
+	    for (i = 0; i < sources.length; i++) {
+                imagesTemp[i] = new Image();
+	        imagesTemp[i].src = sources[i];
+                console.log(imagesTemp[i]);
+	    }
+        }
+        for(var i=0; i<data.products.length; i++){
+            images.push(data.products[i].image_path);
+        }
+        preload(images);
+
+    });
 
     $infoButton.popover({
         placement: 'left'
