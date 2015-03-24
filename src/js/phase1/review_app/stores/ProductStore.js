@@ -17,42 +17,19 @@ var _sortBy = 'Random',
     $doneOrNot = $("#done-or-not"),
     $numReviews = $('#num-reviews'),
     _currentIndex = 15,
-    _lastReviewedId,
-    _firstLaunch = true;
+    _lastReviewedId;
 
 function imageLoaded(){
     console.log("image preloaded");
 }
 // lets preload the images (the ones not on first screen)
-function preload(sources, chunkSize) {
-    chunkSize = chunkSize || sources.length;
-    var sourcesChunked = _.chunk(sources, chunkSize);
-    var steps = sourcesChunked.length;
-    var current = 0;
-    var inner = function(_current){
-        var imagesTemp = [];
-        var l = sourcesChunked[_current].length;
-        var counter = 0;
-        var callback = function(){
-                counter++;
-                if(counter == l - 1){
-                    if(_current < steps - 1){
-                        inner(++_current);
-                    }
-                    else {
-                        // preloading done
-                        console.log("preloading done");
-                    }
-                }
-        };
-        for (var i = 0; i < l; i++) {
-            console.log("preloading imagel")
+function preload(sources) {
+    var imagesTemp = [];
+    for (var i = 0, l=sources.length; i < l; i++) {
             imagesTemp[i] = new Image();
-	    imagesTemp[i].src = sourcesChunked[_current][i].image_path;
-            imagesTemp[i].onload = callback;
+	    imagesTemp[i].src = sources[i].image_path;
+            imagesTemp[i].onload = imageLoaded;
         }
-    };
-    inner(current);
 }
 
 
@@ -74,6 +51,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
     //called by root component at startup
     init: function(products, tags, num){
         
+        preload(products);
         _productsOriginal = products;
 
         // We add a field to every tags
@@ -133,10 +111,6 @@ var ProductStore = assign({}, EventEmitter.prototype, {
     // Used by the ProductsContainer component to set its state
     getProducts: function(){
         //preload images by chunks of 15
-        if(_firstLaunch){
-            preload(_products, 15);
-            _firstLaunch = false;
-        }
         return {
             products: _products.slice(0, _currentIndex)
         };
