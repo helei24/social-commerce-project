@@ -32408,22 +32408,17 @@ var ProductsContainer = React.createClass({displayName: "ProductsContainer",
         this.setState(getProductsState());
     },
     render: function(){
-        var productss = [];
 
-        for(var i=0; i<this.state.currentIndex;i++){
-            if(i >= this.state.products.length) break;
-            productss.push(React.createElement(Product, {data: this.state.products[i], key: i}));
-        }
         var products = this.state.products.map(function(m, i){
             return(
                 React.createElement(Product, {data: m, key: i})
             );
-        }.bind(this));
+        })
 
         return(
             React.createElement("div", {className: "product-pages col-xs-9"}, 
                 React.createElement("div", {id: "products", className: "will-fade"}, 
-                    productss
+                    products
                 )
             )
         );
@@ -32934,7 +32929,22 @@ var _sortBy = 'Random',
     $doneOrNot = $("#done-or-not"),
     $numReviews = $('#num-reviews'),
     _currentIndex = 15,
-    _lastReviewedId;
+    _lastReviewedId,
+    _preloadCount = 0;
+
+function imageLoaded(){
+    console.log("image preloaded");
+}
+// lets preload the images (the ones not on first screen)
+function preload(sources) {
+    var imagesTemp = [];
+    for (i = 0; i < sources.length; i++) {
+        imagesTemp[i] = new Image();
+	imagesTemp[i].src = sources[i];
+        imagesTemp[i].onload = imageLoaded;
+    }
+}
+
 
 // Return the number of reviewed products by the current user
 function getNumberOfReviewedProducts(products){
@@ -33011,9 +33021,19 @@ var ProductStore = assign({}, EventEmitter.prototype, {
 
     // Used by the ProductsContainer component to set its state
     getProducts: function(){
+        if(_preloadCount!=_productsOriginal.length){
+            for(var i=_currentIndex; i<_products.length;i++){
+                preload(_products[i]); 
+                _preloadCount++;
+            }
+        }
+        var tempProducts = [];
+        for(var i = 0;i<_currentIndex;i++){
+            if(i>=_products.length) break;
+            tempProducts.push(_products[i]);
+        }
         return {
-            products: _products,
-            currentIndex: _currentIndex
+            products: tempProducts
         };
     },
 
