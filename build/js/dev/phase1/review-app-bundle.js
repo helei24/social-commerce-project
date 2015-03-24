@@ -32396,7 +32396,7 @@ var ProductsContainer = React.createClass({displayName: "ProductsContainer",
         ProductStore.addChangeListener(this._onChange);
         $(window).scroll(function() {
             // we add 100 for a little buffer!
-            if($(window).scrollTop() + $(window).height() >= $(document).height()) {
+            if($(window).scrollTop() + $(window).height() + 50 >= $(document).height()) {
                 ProductActions.infiniteScroll();
             }
         });
@@ -32931,18 +32931,6 @@ var _sortBy = 'Random',
     _currentIndex = 15,
     _lastReviewedId;
 
-function imageLoaded(){
-    console.log("image preloaded");
-}
-// lets preload the images (the ones not on first screen)
-function preload(sources) {
-    var imagesTemp = [];
-    for (var i = 0, l=sources.length; i < l; i++) {
-            imagesTemp[i] = new Image();
-	    imagesTemp[i].src = sources[i].image_path;
-            imagesTemp[i].onload = imageLoaded;
-        }
-}
 
 
 // Return the number of reviewed products by the current user
@@ -32963,7 +32951,6 @@ var ProductStore = assign({}, EventEmitter.prototype, {
     //called by root component at startup
     init: function(products, tags, num){
         
-        preload(products);
         _productsOriginal = products;
 
         // We add a field to every tags
@@ -33179,6 +33166,7 @@ AppDispatcher.register(function(action){
     case ProductConstants.INFINITE_SCROLL:
         ProductStore.incrementCurrentIndex();
         ProductStore.emitChange();
+        break;
     default:
         break;
     }
@@ -33401,6 +33389,14 @@ var ReviewApp = require('./components/ReviewApp.react.jsx');
 //Called in the django template
 var init = function init(data){
     
+    function preload(sources) {
+        var imagesTemp = [];
+        for (var i = 0, l=sources.length; i < l; i++) {
+            imagesTemp[i] = new Image();
+	    imagesTemp[i].src = sources[i].image_path;
+        }
+    }
+    preload(data.products);
 
     //Rendering of root component
     React.render(
