@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 {% load staticfiles %}
 {% load socialaccount %}
-{% providers_media_js %}
 <html>
     <head>
         <link href='http://fonts.googleapis.com/css?family=Lobster|Open+Sans:300italic,400italic,700italic,700,300,400' rel='stylesheet' type='text/css'>
@@ -10,15 +9,13 @@
         <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'>
         <link href="{% static "css/vendor/bootstrap.min.css" %}" type="text/css" rel="stylesheet"/>
         <link href="{% static "css/base.min.css" %}" type="text/css" rel="stylesheet"/>
-        <meta charset="UTF-8">
-        <title>{% block head_title %}{% endblock %}</title>
         {% block extraheader %}
         {% endblock %}
+        <meta charset="UTF-8">
+        <title>{% block head_title %}{% endblock %}</title>
     </head>
     <body>
         <div id="overlay"></div>
-        <!-- <div id="particles-js">
-             </div> -->
         <div class="container">
             {% block body %}
             {% endblock %}

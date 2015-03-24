@@ -102,7 +102,8 @@ def step2(request):
 def questionnaire(request):
     if request.method == "POST":
         # If is valid
-        set_user_step(request.user, 3)
+        if not request.user.is_superuser:
+            set_user_step(request.user, 3)
         return HttpResponseRedirect('/phase1/step3/')
 
     raise Http404("Only accesible with POST")

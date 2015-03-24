@@ -1,11 +1,11 @@
 {% extends "base.djhtml" %}
 {% load static %}
 {% load socialaccount %}
-{% providers_media_js %}
 {% block extraheader %}
     <link href="{% static "css/phase1/home.min.css" %}" rel="stylesheet"/>
 {% endblock %}
 {% block body %}
+{% providers_media_js %}
     <div id="wrapper">
         <div id="logo">
             <h1>Review It!</h1>
