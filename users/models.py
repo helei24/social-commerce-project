@@ -21,12 +21,9 @@ def get_number_reviews(user):
 def check_for_friends(sender, **kwargs):
     # We start by getting the token
     user = kwargs.pop('user')
-    try:
-        social_account = SocialAccount.objects.get(user=user)
-        token = SocialToken.objects.get(account=social_account)
-        userid = SocialAccount.objects.get(user=user).uid
-    except:
-        return
+    social_account = SocialAccount.objects.get(user=user)
+    token = SocialToken.objects.get(account=social_account)
+    userid = SocialAccount.objects.get(user=user).uid
 
     # We do an api call
     base_url = "https://graph.facebook.com/v2.2/"
@@ -37,7 +34,10 @@ def check_for_friends(sender, **kwargs):
     for f in friends_using_app:
 
         friend_id = f['id']
-        friend = SocialAccount.objects.get(uid=friend_id).user
+        try:
+            friend = SocialAccount.objects.get(uid=friend_id).user
+        except:
+            return
         if not is_friendship_exists(user, friend):
             Friendship.objects.get_or_create(
                 user=user,
