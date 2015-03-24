@@ -18,19 +18,43 @@ var _sortBy = 'Random',
     $numReviews = $('#num-reviews'),
     _currentIndex = 15,
     _lastReviewedId,
-    _preloadCount = 0;
+    _preloadCount = 0,
+_preloadingDone = false;
 
 function imageLoaded(){
-    console.log("image preloaded");
+    // console.log("image preloaded");
 }
 // lets preload the images (the ones not on first screen)
-function preload(sources) {
-    var imagesTemp = [];
-    for (i = 0; i < sources.length; i++) {
-        imagesTemp[i] = new Image();
-	imagesTemp[i].src = sources[i];
-        imagesTemp[i].onload = imageLoaded;
-    }
+function preload(sources, chunkSize) {
+    if(_preloadingDone) return;
+    var sourcesChunked = _.chunk(sources, chunkSize);
+    var steps = sourcesChunked.length;
+    console.log("there are " + steps + " chunks");
+    var current = 0;
+    var inner = function(_current){
+        console.log("calling inner with current chunk "+_current);
+        var imagesTemp = [];
+        var l = sourcesChunked[_current].length;
+        var counter = 0;
+        for (var i = 0; i < l; i++) {
+            console.log("loading " + i);
+            imagesTemp[i] = new Image();
+	    imagesTemp[i].src = sourcesChunked[_current][i].image_path;
+            imagesTemp[i].onload = function(){
+                console.log("loaded");
+                counter++;
+                if(counter == l - 1){
+                    if(_current < steps - 1){
+                        inner(++_current);
+                    }
+                    else {
+                        _preloadingDone = true;
+                    }
+                }
+            };
+        }
+    };
+    inner(current);
 }
 
 
@@ -109,19 +133,9 @@ var ProductStore = assign({}, EventEmitter.prototype, {
 
     // Used by the ProductsContainer component to set its state
     getProducts: function(){
-        if(_preloadCount!=_productsOriginal.length){
-            for(var i=_currentIndex; i<_products.length;i++){
-                preload(_products[i]); 
-                _preloadCount++;
-            }
-        }
-        var tempProducts = [];
-        for(var i = 0;i<_currentIndex;i++){
-            if(i>=_products.length) break;
-            tempProducts.push(_products[i]);
-        }
+        preload(_products, 10);
         return {
-            products: tempProducts
+            products: _products.slice(0, _currentIndex)
         };
     },
 
