@@ -32,17 +32,16 @@ def check_for_friends(sender, **kwargs):
     friends_using_app = requests.get(full_url).json()['data']
 
     for f in friends_using_app:
-
         friend_id = f['id']
         try:
             friend = SocialAccount.objects.get(uid=friend_id).user
+            if not is_friendship_exists(user, friend):
+                Friendship.objects.get_or_create(
+                    user=user,
+                    friend=friend
+                )
         except:
             return
-        if not is_friendship_exists(user, friend):
-            Friendship.objects.get_or_create(
-                user=user,
-                friend=friend
-            )
 
 
 # we create a user step bound to the user
