@@ -32933,7 +32933,7 @@ var _sortBy = 'Random',
     _firstLaunch = true;
 
 function imageLoaded(){
-    // console.log("image preloaded");
+    console.log("image preloaded");
 }
 // lets preload the images (the ones not on first screen)
 function preload(sources, chunkSize) {
@@ -32946,7 +32946,6 @@ function preload(sources, chunkSize) {
         var l = sourcesChunked[_current].length;
         var counter = 0;
         var callback = function(){
-            console.log("updated counter");
                 counter++;
                 if(counter == l - 1){
                     if(_current < steps - 1){
@@ -32954,11 +32953,12 @@ function preload(sources, chunkSize) {
                     }
                     else {
                         // preloading done
+                        console.log("preloading done");
                     }
                 }
         };
         for (var i = 0; i < l; i++) {
-           
+            console.log("preloading imagel")
             imagesTemp[i] = new Image();
 	    imagesTemp[i].src = sourcesChunked[_current][i].image_path;
             imagesTemp[i].onload = callback;
