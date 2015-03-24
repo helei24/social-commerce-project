@@ -29,17 +29,20 @@ def check_for_friends(sender, **kwargs):
     base_url = "https://graph.facebook.com/v2.2/"
     # Then we get his friends
     full_url = base_url + userid + "/friends?access_token=" + str(token)
-    friends_using_app = requests.get(full_url).json()['data']
+    try: 
+        friends_using_app = requests.get(full_url).json()['data']
 
-    for f in friends_using_app:
+        for f in friends_using_app:
 
-        friend_id = f['id']
-        friend = SocialAccount.objects.get(uid=friend_id).user
-        if not is_friendship_exists(user, friend):
-            Friendship.objects.get_or_create(
-                user=user,
-                friend=friend
-            )
+            friend_id = f['id']
+            friend = SocialAccount.objects.get(uid=friend_id).user
+            if not is_friendship_exists(user, friend):
+                Friendship.objects.get_or_create(
+                    user=user,
+                    friend=friend
+                )
+    except:
+        print("no friends")
 
 
 # we create a user step bound to the user
