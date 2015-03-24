@@ -41,7 +41,7 @@ def check_for_friends(sender, **kwargs):
                     friend=friend
                 )
         except:
-            return
+            pass
 
 
 # we create a user step bound to the user
