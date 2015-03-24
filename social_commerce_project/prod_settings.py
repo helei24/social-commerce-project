@@ -149,7 +149,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
-STATIC_PATH = "/home/htdocs/"
+STATIC_PATH = "/build/"
 
 STATIC_URL = '/static/'
 
@@ -157,7 +157,7 @@ STATICFILES_DIRS = (
     STATIC_PATH,
 )
 
-STATIC_ROOT = "/home/htdocs/"
+STATIC_ROOT = "/home/socialcomm/webapps/htdocs/"
 # Our template directory path
 TEMPLATE_PATH = os.path.join(BASE_DIR, 'templates')
 
