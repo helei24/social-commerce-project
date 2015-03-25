@@ -14,5 +14,6 @@ module.exports = keyMirror({
     TOGGLE_RECOMMEND: null,
     COMMENT_CHANGED: null,
     DELETE_REVIEW: null,
-    INFINITE_SCROLL: null
+    INFINITE_SCROLL: null,
+    SET_RATING: null
 });

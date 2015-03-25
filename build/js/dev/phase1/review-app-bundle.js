@@ -32137,7 +32137,10 @@ if ("production" !== process.env.NODE_ENV) {
 module.exports = warning;
 
 }).call(this,require('_process'))
-},{"./emptyFunction":"/Users/Felix/Documents/social_commerce_project/node_modules/react/lib/emptyFunction.js","_process":"/Users/Felix/Documents/social_commerce_project/node_modules/browserify/node_modules/process/browser.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js":[function(require,module,exports){
+},{"./emptyFunction":"/Users/Felix/Documents/social_commerce_project/node_modules/react/lib/emptyFunction.js","_process":"/Users/Felix/Documents/social_commerce_project/node_modules/browserify/node_modules/process/browser.js"}],"/Users/Felix/Documents/social_commerce_project/node_modules/react/react.js":[function(require,module,exports){
+module.exports = require('./lib/React');
+
+},{"./lib/React":"/Users/Felix/Documents/social_commerce_project/node_modules/react/lib/React.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js":[function(require,module,exports){
 var AppDispatcher = require('../dispatcher/AppDispatcher');
 var ProductConstants = require('../constants/ProductConstants');
 
@@ -32203,6 +32206,13 @@ var ProductActions = {
             reviewData: reviewData
         });
     },
+    setRating: function(rating){
+        AppDispatcher.dispatch({
+            actionType: ProductConstants.SET_RATING,
+            rating: rating
+        });
+        
+    },
     deleteReview: function(product){
         $.post(
             '/phase1/review/',
@@ -32243,7 +32253,7 @@ module.exports = ProductActions;
 
 
 },{"../constants/ProductConstants":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/constants/ProductConstants.js","../dispatcher/AppDispatcher":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/dispatcher/AppDispatcher.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/Product.react.jsx":[function(require,module,exports){
-var React = require('react/addons');
+var React = require('react');
 var ProductActions = require('../actions/ProductActions');
 var ProductContainer = require('./ProductsContainer.react.jsx');
 var ProductStore = require('../stores/ProductStore');
@@ -32343,8 +32353,8 @@ var Product = React.createClass({displayName: "Product",
         }
         else {
             checkMark= "";
-            opacityControl = "";
             imgReviewedClass="";
+            opacityControl = ""
             button = React.createElement("button", {className: "btn btn-info btn-sm", onClick: this.reviewIt}, "I've seen it!");
         }
 
@@ -32352,11 +32362,11 @@ var Product = React.createClass({displayName: "Product",
             React.createElement("div", {className: "product animated fadeIn col-xs-15"}, 
             React.createElement("div", {className: "product-inner effect6"}, 
                 React.createElement("h5", {className: opacityControl, ref: "name", "data-toggle": "popover", "data-content": this.props.data.name}, name), 
-                React.createElement("div", {className: "img-container"}, 
+                React.createElement("div", {className: "checkmark-container"}, 
                     checkMark, 
-                    React.createElement("div", {className: opacityControl}, 
-                        React.createElement("img", {src: this.props.data.sm_image_path, alt: this.props.data.name})
-                    )
+                React.createElement("div", {className: opacityControl + " img-container"}, 
+                    React.createElement("img", {src: this.props.data.sm_image_path, alt: this.props.data.name})
+                )
                 ), 
                 React.createElement("p", {className: opacityControl}, this.props.data.caracteristic_1), 
                 button
@@ -32370,7 +32380,7 @@ module.exports = Product;
 
 
 
-},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","../stores/ProductStore":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/stores/ProductStore.js","./ProductsContainer.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx":[function(require,module,exports){
+},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","../stores/ProductStore":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/stores/ProductStore.js","./ProductsContainer.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx","react":"/Users/Felix/Documents/social_commerce_project/node_modules/react/react.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ProductsContainer.react.jsx":[function(require,module,exports){
 var React = require('react/addons');
 var CSSTransitionGroup = React.addons.CSSTransitionGroup;
 var Product = require("./Product.react.jsx")
@@ -32600,6 +32610,7 @@ var React = require('react/addons');
 var ReviewFormTab = require('./ReviewFormTab.react.jsx');
 var ProductActions = require("../actions/ProductActions");
 var ReviewBoxStore = require("../stores/ReviewBoxStore");
+var StarsRating = require("./StarsRating.react.jsx");
 
 var ReviewForm = React.createClass({displayName: "ReviewForm",
     // We only need to set initial state since
@@ -32692,16 +32703,10 @@ var ReviewForm = React.createClass({displayName: "ReviewForm",
                                onChange: this.commentChanged, 
                                defaultValue: this.state.comment}
                      ), 
-                     React.createElement("div", {"data-toggle": "buttons", id: "recommend"}, 
-                         React.createElement("label", {className: recommendItClasses, onClick: this.toggleRecommendIt}, 
-                             React.createElement("input", {type: "checkbox", autocomplete: "off", value: "checked"}), 
-                             "I recommend it!"
-                         )
-                     ), 
+                     React.createElement(StarsRating, {rating: this.state.rating}), 
                      React.createElement("div", {id: "submit-container"}, 
-                         React.createElement("button", {className: "btn btn-success bottom-btn", id: "submit-button", onClick: editing? this.editReview : this.submitReview}, submitBtnTxt), 
+                         React.createElement("button", {className: "btn btn-primary bottom-btn", id: "submit-button", onClick: editing? this.editReview : this.submitReview}, submitBtnTxt), 
                          deleteBtn
-                         
                      )
                  )
              )
@@ -32712,7 +32717,7 @@ module.exports = ReviewForm;
 
 
 
-},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","../stores/ReviewBoxStore":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/stores/ReviewBoxStore.js","./ReviewFormTab.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ReviewFormTab.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ReviewFormTab.react.jsx":[function(require,module,exports){
+},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","../stores/ReviewBoxStore":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/stores/ReviewBoxStore.js","./ReviewFormTab.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ReviewFormTab.react.jsx","./StarsRating.react.jsx":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/StarsRating.react.jsx","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/ReviewFormTab.react.jsx":[function(require,module,exports){
 var React = require('react/addons');
 var ProductActions = require('../actions/ProductActions');
 
@@ -32880,7 +32885,85 @@ module.exports = SideBar;
 
 
 
-},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","../stores/ProductStore":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/stores/ProductStore.js","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/constants/ProductConstants.js":[function(require,module,exports){
+},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","../stores/ProductStore":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/stores/ProductStore.js","react/addons":"/Users/Felix/Documents/social_commerce_project/node_modules/react/addons.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/components/StarsRating.react.jsx":[function(require,module,exports){
+var React = require('react');
+var ProductActions = require('../actions/ProductActions');
+
+var empty = "fa fa-star-o fa-2x";
+var full = "fa fa-star fa-2x";
+
+var StarsRating = React.createClass({displayName: "StarsRating",
+    componentDidMount: function(){
+        console.log("component did mount");
+        this.setStars(this.props.rating);
+    },
+    componentDidUpdate: function(){
+    },
+    setStars: function(comparator){
+        for (var i=5; i>0;i--){
+            var ref = "star" + i;
+            if(i <= comparator){
+                this.refs[ref].getDOMNode().className = full;
+            } else {
+                this.refs[ref].getDOMNode().className = empty;
+            }
+        }
+    },
+    mouseleaveStar: function(e){
+        this.setStars(parseInt(e.target.id.substr(e.target.id.length - 1)));
+    },
+    mouseenterStar: function(e){
+        this.setStars(parseInt(e.target.id.substr(e.target.id.length - 1)));
+    },
+    mouseleaveAllStars: function(e){
+        this.setStars(this.props.rating);
+    },
+    clickStar: function(e){
+        var num = parseInt(e.target.id.substr(e.target.id.length - 1))
+        this.props.rating = parseInt(num);
+        this.setStars(this.props.rating);
+        ProductActions.setRating(num);
+    },
+    render: function(){
+        return (
+            React.createElement("div", {id: "stars-container"}, 
+                React.createElement("span", {onMouseLeave: this.mouseleaveAllStars}, 
+                React.createElement("i", {id: "star1", className: empty, 
+                   onClick: this.clickStar, 
+                   onMouseEnter: this.mouseenterStar, 
+                   onMouseLeave: this.mouseleaveStar, 
+                   ref: "star1"}), 
+                React.createElement("i", {id: "star2", className: empty, 
+                   onClick: this.clickStar, 
+                   onMouseEnter: this.mouseenterStar, 
+                   onMouseLeave: this.mouseleaveStar, 
+                   ref: "star2"}), 
+                React.createElement("i", {id: "star3", className: empty, 
+                   onClick: this.clickStar, 
+                   onMouseEnter: this.mouseenterStar, 
+                   onMouseLeave: this.mouseleaveStar, 
+                   ref: "star3"}), 
+                React.createElement("i", {id: "star4", className: empty, 
+                   onClick: this.clickStar, 
+                   onMouseEnter: this.mouseenterStar, 
+                   onMouseLeave: this.mouseleaveStar, 
+                   ref: "star4"}), 
+                React.createElement("i", {id: "star5", className: empty, 
+                   onClick: this.clickStar, 
+                   onMouseEnter: this.mouseenterStar, 
+                   onMouseLeave: this.mouseleaveStar, 
+                   ref: "star5"})
+                )
+            ) 
+        );
+    }
+})
+
+module.exports = StarsRating;
+
+
+
+},{"../actions/ProductActions":"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/actions/ProductActions.js","react":"/Users/Felix/Documents/social_commerce_project/node_modules/react/react.js"}],"/Users/Felix/Documents/social_commerce_project/src/js/phase1/review_app/constants/ProductConstants.js":[function(require,module,exports){
 var keyMirror = require('keymirror');
 
 module.exports = keyMirror({
@@ -32897,7 +32980,8 @@ module.exports = keyMirror({
     TOGGLE_RECOMMEND: null,
     COMMENT_CHANGED: null,
     DELETE_REVIEW: null,
-    INFINITE_SCROLL: null
+    INFINITE_SCROLL: null,
+    SET_RATING: null
 });
 
 
@@ -33126,7 +33210,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         product.review = {
             boolAnswers:boolAnswers,
             comment: reviewData.comment,
-            recommendIt: reviewData.recommendIt
+            rating: reviewData.rating
         };
 
         _lastReviewedId = product.id;
@@ -33209,9 +33293,7 @@ var _reviewBox = {
     $overlay,
     _reviewElementsOriginal,
     _reviewElements,
-    _recommendIt = false,
-    _reviewData,
-    _comment = '';
+    _reviewData;
 
 
 function setAllReviewElementsFalse(){
@@ -33235,12 +33317,10 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
         // We set all elements' isChecked to false
         setAllReviewElementsFalse();
 
-        // Deep copy
-        // _reviewElementsOriginal = $.extend(true, [], reviewElements);
         _reviewData = {
-            comment: _comment,
+            comment: "",
             tabs: _reviewElements,
-            recommendIt: _recommendIt
+            rating: 0
         };
 
         // We set up the overlay for closing the review box
@@ -33272,7 +33352,7 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
 
             //we build update review data
             _reviewData.comment = reviewData.comment;
-            _reviewData.recommendIt = reviewData.recommendIt;
+            _reviewData.rating = reviewData.rating;
 
             // we need isChecked to correspond to bool value
             for(var i=0, l=_reviewElements.length; i<l;i++){
@@ -33308,7 +33388,7 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
         this.resetReviewData();
     },
     resetReviewData: function(){
-        _reviewData.recommendIt = false;
+        _reviewData.rating = 0;
         _reviewData.comment = "";
         setAllReviewElementsFalse();
         // deep copy
@@ -33316,6 +33396,9 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
     },
     getReviewState: function(){
         return _reviewBox;
+    },
+    setRating: function(rating){
+        _reviewData.rating = rating;
     },
     toggleRecommendIt: function(comment){
         _reviewData.recommendIt = !_reviewData.recommendIt;
@@ -33353,6 +33436,9 @@ AppDispatcher.register(function(action){
     case ProductConstants.COMMENT_CHANGED:
         ReviewBoxStore.commentChanged(action.data);
         break;
+    case ProductConstants.SET_RATING:
+        ReviewBoxStore.setRating(action.rating);
+        break;
     default:
         break;
     }
@@ -33388,12 +33474,15 @@ var React = require('react/addons');
 var ReviewApp = require('./components/ReviewApp.react.jsx');
 //Called in the django template
 var init = function init(data){
-    
+   var counter = 0; 
     function preload(sources) {
         var imagesTemp = [];
+        var imagesTempLg = [];
         for (var i = 0, l=sources.length; i < l; i++) {
             imagesTemp[i] = new Image();
+            imagesTempLg[i] = new Image();
 	    imagesTemp[i].src = sources[i].sm_image_path;
+	    imagesTemp[i].src = sources[i].image_path;
         }
     }
     preload(data.products);

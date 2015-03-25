@@ -1,7 +1,7 @@
 from django.db import models
 from django.templatetags.static import static
 from reviews.models import Reviewing, ReviewBoolAnswer,\
-    ReviewComment, ReviewRecommendIt
+    ReviewComment, ReviewRating
 import json
 
 
@@ -65,17 +65,17 @@ class CustomProductManager(models.Manager):
                     .get(reviewing=reviewing)\
                     .text_value
 
-                # we get the recommend_it
-                recommend_it = ReviewRecommendIt\
+                # we get the rating
+                rating = ReviewRating\
                     .objects\
                     .get(reviewing=reviewing)\
-                    .boolean_value
+                    .rating
 
                 # we set the review
                 p['review'] = dict(
                     boolAnswers=bool_answers,
                     comment=comment,
-                    recommendIt=recommend_it
+                    rating=rating
                 )
 
             # else there is no review for the product

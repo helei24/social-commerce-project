@@ -31,9 +31,7 @@ var _reviewBox = {
     $overlay,
     _reviewElementsOriginal,
     _reviewElements,
-    _recommendIt = false,
-    _reviewData,
-    _comment = '';
+    _reviewData;
 
 
 function setAllReviewElementsFalse(){
@@ -57,12 +55,10 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
         // We set all elements' isChecked to false
         setAllReviewElementsFalse();
 
-        // Deep copy
-        // _reviewElementsOriginal = $.extend(true, [], reviewElements);
         _reviewData = {
-            comment: _comment,
+            comment: "",
             tabs: _reviewElements,
-            recommendIt: _recommendIt
+            rating: 0
         };
 
         // We set up the overlay for closing the review box
@@ -94,7 +90,7 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
 
             //we build update review data
             _reviewData.comment = reviewData.comment;
-            _reviewData.recommendIt = reviewData.recommendIt;
+            _reviewData.rating = reviewData.rating;
 
             // we need isChecked to correspond to bool value
             for(var i=0, l=_reviewElements.length; i<l;i++){
@@ -130,7 +126,7 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
         this.resetReviewData();
     },
     resetReviewData: function(){
-        _reviewData.recommendIt = false;
+        _reviewData.rating = 0;
         _reviewData.comment = "";
         setAllReviewElementsFalse();
         // deep copy
@@ -138,6 +134,9 @@ var ReviewBoxStore = assign({}, EventEmitter.prototype, {
     },
     getReviewState: function(){
         return _reviewBox;
+    },
+    setRating: function(rating){
+        _reviewData.rating = rating;
     },
     toggleRecommendIt: function(comment){
         _reviewData.recommendIt = !_reviewData.recommendIt;
@@ -174,6 +173,9 @@ AppDispatcher.register(function(action){
         break;
     case ProductConstants.COMMENT_CHANGED:
         ReviewBoxStore.commentChanged(action.data);
+        break;
+    case ProductConstants.SET_RATING:
+        ReviewBoxStore.setRating(action.rating);
         break;
     default:
         break;

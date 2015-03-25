@@ -63,6 +63,13 @@ var ProductActions = {
             reviewData: reviewData
         });
     },
+    setRating: function(rating){
+        AppDispatcher.dispatch({
+            actionType: ProductConstants.SET_RATING,
+            rating: rating
+        });
+        
+    },
     deleteReview: function(product){
         $.post(
             '/phase1/review/',

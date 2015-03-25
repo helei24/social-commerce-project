@@ -2,6 +2,7 @@ var React = require('react/addons');
 var ReviewFormTab = require('./ReviewFormTab.react.jsx');
 var ProductActions = require("../actions/ProductActions");
 var ReviewBoxStore = require("../stores/ReviewBoxStore");
+var StarsRating = require("./StarsRating.react.jsx");
 
 var ReviewForm = React.createClass({
     // We only need to set initial state since
@@ -94,16 +95,10 @@ var ReviewForm = React.createClass({
                                onChange={this.commentChanged}
                                defaultValue={this.state.comment}>
                      </textarea>
-                     <div data-toggle="buttons" id="recommend">
-                         <label className={recommendItClasses} onClick={this.toggleRecommendIt}>
-                             <input type="checkbox" autocomplete="off" value="checked"/>
-                             I recommend it!
-                         </label>
-                     </div>
+                     <StarsRating rating={this.state.rating}/>
                      <div id="submit-container">
-                         <button className="btn btn-success bottom-btn" id="submit-button" onClick={editing? this.editReview : this.submitReview}>{submitBtnTxt}</button>
+                         <button className="btn btn-primary bottom-btn" id="submit-button" onClick={editing? this.editReview : this.submitReview}>{submitBtnTxt}</button>
                          {deleteBtn}
-                         
                      </div>
                  </div>
              )

@@ -1,4 +1,4 @@
-var React = require('react/addons');
+var React = require('react');
 var ProductActions = require('../actions/ProductActions');
 var ProductContainer = require('./ProductsContainer.react.jsx');
 var ProductStore = require('../stores/ProductStore');
@@ -98,8 +98,8 @@ var Product = React.createClass({
         }
         else {
             checkMark= "";
-            opacityControl = "";
             imgReviewedClass="";
+            opacityControl = ""
             button = <button className="btn btn-info btn-sm" onClick={this.reviewIt}>I've seen it!</button>;
         }
 
@@ -107,11 +107,11 @@ var Product = React.createClass({
             <div className="product animated fadeIn col-xs-15">
             <div className="product-inner effect6">
                 <h5 className={opacityControl} ref="name" data-toggle="popover" data-content={this.props.data.name}>{name}</h5>
-                <div className="img-container">
+                <div className="checkmark-container">
                     {checkMark}
-                    <div className={opacityControl}>
-                        <img src={this.props.data.sm_image_path} alt={this.props.data.name}/>
-                    </div>
+                <div className={opacityControl + " img-container"}>
+                    <img src={this.props.data.sm_image_path} alt={this.props.data.name}/>
+                </div>
                 </div>
                 <p className={opacityControl}>{this.props.data.caracteristic_1}</p>
                 {button}

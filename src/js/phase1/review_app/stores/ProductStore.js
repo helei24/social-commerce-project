@@ -214,7 +214,7 @@ var ProductStore = assign({}, EventEmitter.prototype, {
         product.review = {
             boolAnswers:boolAnswers,
             comment: reviewData.comment,
-            recommendIt: reviewData.recommendIt
+            rating: reviewData.rating
         };
 
         _lastReviewedId = product.id;
