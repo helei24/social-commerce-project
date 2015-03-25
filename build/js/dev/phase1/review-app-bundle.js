@@ -33489,6 +33489,7 @@ var init = function init(data){
 	    imagesTemp[i].src = sources[i].sm_image_path;
             imagesTempLg[i] = new Image();
 	    imagesTempLg[i].src = sources[i].image_path;
+            console.log("preloading");
         }
     }
     preload(data.products);
