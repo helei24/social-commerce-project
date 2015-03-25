@@ -33393,7 +33393,7 @@ var init = function init(data){
         var imagesTemp = [];
         for (var i = 0, l=sources.length; i < l; i++) {
             imagesTemp[i] = new Image();
-	    imagesTemp[i].src = sources[i].image_path_min;
+	    imagesTemp[i].src = sources[i].sm_image_path;
         }
     }
     preload(data.products);
