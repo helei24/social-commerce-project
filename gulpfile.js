@@ -184,21 +184,12 @@ gulp.task('compress-images', function(){
     pipe(gulp.dest('build/images/'));
 });
 
-gulp.task('resize-images', function(){
-    return gulp.src('./src/images/products/*.jpg')
-    .pipe(imageResize({
-        width: 121,
-        height: 182
-    }))
-    .pipe(gulp.dest('./build/images/products/small/'));
-});
-
 gulp.task("parallel", function () {
     return gulp.src("./src/images/products/*.{jpg, jpeg}")
     .pipe(parallel(
         imageResize({ width : 121, height: 182  }),
         os.cpus().length
-    )).pipe(gulp.dest("./build/images/products/small/"));
+    )).pipe(gulp.dest("./src/images/products/small/"));
 });
 
 gulp.task('watch', ['browserify-watch'], function(){
