@@ -32406,7 +32406,7 @@ var ProductsContainer = React.createClass({displayName: "ProductsContainer",
         ProductStore.addChangeListener(this._onChange);
         $(window).scroll(function() {
             // we add 100 for a little buffer!
-            if($(window).scrollTop() + $(window).height() + 50 >= $(document).height()) {
+            if($(window).scrollTop() + $(window).height() + 100 >= $(document).height()) {
                 ProductActions.infiniteScroll();
             }
         });
@@ -33496,7 +33496,7 @@ var init = function init(data){
             React.createElement(ReviewApp, data),
             document.getElementById('reviewapp')
         );
-    /* preload(data.products); */
+    preload(data.products);
 }
 
 module.exports = init;

@@ -23,7 +23,7 @@ var ProductsContainer = React.createClass({
         ProductStore.addChangeListener(this._onChange);
         $(window).scroll(function() {
             // we add 100 for a little buffer!
-            if($(window).scrollTop() + $(window).height() + 50 >= $(document).height()) {
+            if($(window).scrollTop() + $(window).height() + 100 >= $(document).height()) {
                 ProductActions.infiniteScroll();
             }
         });
