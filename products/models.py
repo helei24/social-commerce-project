@@ -99,7 +99,6 @@ def get_product_urls():
     urls = []
     products_urls = list(Product.objects.all().values("image_path"))
     for p_u in products_urls:
-        print(p_u)
         urls.append({
             'small': static('images/products/small/' + p_u['image_path']),
             'large': static('images/products/' + p_u['image_path']),
