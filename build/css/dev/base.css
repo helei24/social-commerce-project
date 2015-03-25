@@ -53,3 +53,12 @@ h1 {
 
 #overlay {
   display: "hidden"; }
+
+#landscape-mode-alert {
+  display: none; }
+
+@media screen and (orientation: portrait) {
+  #main-wrapper {
+    display: none; }
+  #landscape-mode-alert {
+    display: block; } }
