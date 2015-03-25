@@ -64,16 +64,15 @@
     <script src="{% static "js/dev/ajax-init.js" %}" type="text/javascript"></script>
     <script src="{% static "js/dev/phase1/review-app-bundle.js" %}" type="text/javascript"></script>
     <script src="{% static "js/dev/phase1/step1.js"%}" type="text/javascript"></script>
-    <!-- <script type="text/javascript">
-     console.log("in step1");
-        var init = require("review-app-bundle");
-        init({
-            reviewElements: {{review_elements|safe}},
-            products: {{products|safe}},
-            tags: {{tags|safe}},
-            number_reviews: {{number_reviews}}
-        });
-    </script> -->
+    <script type="text/javascript">
+     var init = require("review-app-bundle");
+     init({
+         reviewElements: {{review_elements|safe}},
+         products: {{products|safe}},
+         tags: {{tags|safe}},
+         number_reviews: {{number_reviews}}
+     });
+    </script>
 {% endblock %}
 
 

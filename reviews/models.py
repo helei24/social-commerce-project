@@ -75,7 +75,6 @@ def create_review(review_data, user, product):
 def del_review(user, product):
     try:
         Reviewing.objects.get(user=user, product=product).delete()
-        print("deleted")
     except:
         pass
 

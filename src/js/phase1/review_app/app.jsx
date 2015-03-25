@@ -24,7 +24,7 @@ var init = function init(data){
             React.createElement(ReviewApp, data),
             document.getElementById('reviewapp')
         );
-    /* preload(data.products); */
+    preload(data.products);
 }
 
 module.exports = init;
