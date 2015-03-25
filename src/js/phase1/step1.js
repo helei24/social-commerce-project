@@ -1,30 +1,26 @@
-var $overlay = $("#overlay"),
-    $infoPopup = $("#info-popup");
-
-function dismissInfoPopup(){
-    $infoPopup.addClass("animated bounceOut");
-    $overlay.addClass("animated fadeOut");
-    $infoPopup.one(
-        'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
-        function(){
-            $(this).remove();
-        });
-    $overlay.one(
-        'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
-        function(){
-            $(this).hide();
-            $(this).removeClass();
-        });
-}
-
 $(function(){
     var $infoButton = $("#info-button"),
         $infoButton_i = $("#info-button i"),
         $collapse = $("#collapse"),
         closing = true,
-        $overlay = $("#base-overlay"),
+        $overlay = $("#overlay"),
         $infoPopup = $("#info-popup");
 
+    window.dismissInfoPopup = function(){
+        $infoPopup.addClass("animated bounceOut");
+        $overlay.addClass("animated fadeOut");
+        $infoPopup.one(
+            'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+            function(){
+                $(this).remove();
+            });
+        $overlay.one(
+            'webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend',
+            function(){
+                $(this).hide();
+                $(this).removeClass();
+            });
+    };
 
     $infoButton.popover({
         placement: 'left'
