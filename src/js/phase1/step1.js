@@ -4,9 +4,10 @@ $(function(){
         $collapse = $("#collapse"),
         closing = true,
         $overlay = $("#overlay"),
-        $infoPopup = $("#info-popup");
+        $infoPopup = $("#info-popup"),
+        $infoPopupButton = $("#info-popup-button");
 
-    window.dismissInfoPopup = function(){
+    var dismissInfoPopup = function(){
         $infoPopup.addClass("animated bounceOut");
         $overlay.addClass("animated fadeOut");
         $infoPopup.one(
@@ -21,6 +22,8 @@ $(function(){
                 $(this).removeClass();
             });
     };
+
+    $infoPopupButton.click(dismissInfoPopup);
 
     $infoButton.popover({
         placement: 'left'
