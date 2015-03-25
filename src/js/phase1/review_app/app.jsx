@@ -20,13 +20,10 @@ var init = function init(data){
         }
     }
     //Rendering of root component
-    $(document).ready(function(){
-        console.log("rendering");
         React.render(
             React.createElement(ReviewApp, data),
             document.getElementById('reviewapp')
         );
-    });
     /* preload(data.products); */
 }
 
