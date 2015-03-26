@@ -5,6 +5,9 @@ html, body {
 body {
     font-family: 'Open Sans', sans-serif;
 }
+h1 {
+    font-size: 63px;
+}
 .example-enter {
       opacity: 0.01;
         transition: opacity .5s ease-in;
@@ -36,30 +39,4 @@ h1 {
 }
 #overlay {
     display: "hidden";
-}
-#landscape-mode-alert-wrapper {
-    display: none;
-}
-@media screen and (orientation: portrait){
-    body {
-        background: none;
-    }
-    #main-wrapper {
-        display: none; 
-    }
-    #landscape-mode-alert-wrapper {
-        display:block;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        top:0;
-        left:0;
-        text-align: center;
-        h1 {
-            top:45%;
-            position:relative;
-        }
-
-
-    }
 }

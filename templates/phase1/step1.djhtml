@@ -6,7 +6,7 @@
 {% endblock %}
 {% block body %}
     <div class="jumbotron">
-        <h1>The Social Commerce Project</h1>
+        <h1>Review It!</h1>
         <p>Hi {{name}}, nice to see you!!</p>
         <p id="number-review-text">
             So far you have reviewed
